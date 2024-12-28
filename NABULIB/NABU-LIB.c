@@ -3,7 +3,7 @@
 // DJ Sures (c) 2024
 // https://nabu.ca
 // https://github.com/DJSures/NABU-LIB
-// 
+//
 // Read the NABU-LIB.h file for details of each function in this file.
 //
 // **********************************************************************************************
@@ -44,7 +44,7 @@ void initNABULib(void) {
       // HCCA Receive
       ld hl, _isrHCCARX;
       ld (INTERUPT_VECTOR_MAP_ADDRESS), hl;
-    #endif 
+    #endif
 
       // // HCCA Send
       // ld hl, _isrHCCATX;
@@ -86,8 +86,8 @@ void initNABULib(void) {
     origIntMask = 0;
   #elif BIN_TYPE == BIN_CPM
 
-    // if cpm, we get the previous interrupt settings that the BIOS set because we only override 
-    // what we want to use in NABULib. 
+    // if cpm, we get the previous interrupt settings that the BIOS set because we only override
+    // what we want to use in NABULib.
     origIntMask = ayRead(IOPORTA);
   #endif
 
@@ -145,7 +145,7 @@ void NABU_EnableInterrupts(void) {
 }
 
 void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
-        
+
   uint8_t *toPtr = arr + (len - 1);
   uint8_t *fromPtr = toPtr - n;
   uint8_t *endPtr = arr - 1;
@@ -156,14 +156,14 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
     toPtr--;
     fromPtr--;
   }
-  
+
   fromPtr = arr + (n - 1);
-  
+
   while (fromPtr != endPtr) {
 
     *fromPtr = 0x20;
     fromPtr--;
-  }   
+  }
 }
 
 // **************************************************************************
@@ -171,7 +171,7 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
 // -----
 // **************************************************************************
 
-#ifndef DISABLE_HCCA_RX_INT  
+#ifndef DISABLE_HCCA_RX_INT
   void isrHCCARX(void) __naked {
 
     // review LIS and only bc, hl, a registers are used for this function
@@ -206,7 +206,7 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
       reti;
     __endasm;
   }
-#endif 
+#endif
 
 #ifndef DISABLE_KEYBOARD_INT
   void isrKeyboard(void) __naked {
@@ -217,7 +217,7 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
       push hl;
       push af;
       push iy;
-      ld iy, 0;      
+      ld iy, 0;
     __endasm;
 
     uint8_t inKey = IO_KEYBOARD;
@@ -253,7 +253,7 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
       }
     }
 
-    __asm      
+    __asm
       pop iy;
       pop af;
       pop hl;
@@ -361,7 +361,7 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
       putchar('=');
     else
       putchar('Y');
-      
+
     putchar(32 + y);
     putchar(32 + x);
   }
@@ -511,7 +511,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     #if defined(DISABLE_CURSOR) || defined(DISABLE_VDP)
 
-      while (_kbdBufferWritePos == _kbdBufferReadPos);   
+      while (_kbdBufferWritePos == _kbdBufferReadPos);
 
     #else
 
@@ -524,12 +524,12 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
             vdp_writeCharAtLocation(vdp_cursor.x, vdp_cursor.y, CURSOR_CHAR);
           else if (cursorCnt == 15000)
             vdp_writeCharAtLocation(vdp_cursor.x, vdp_cursor.y, ' ');
-          else if (cursorCnt > 30000)     
+          else if (cursorCnt > 30000)
             cursorCnt = 0;
-          
+
           cursorCnt++;
         }
-      
+
       if (CURSOR_CHAR != 0)
         vdp_writeCharAtLocation(vdp_cursor.x, vdp_cursor.y, ' ');
 
@@ -608,7 +608,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     uint32_t timer = 0;
 
     while (_rxBufferWritePos == _rxBufferReadPos) {
-      
+
       timer++;
 
       if (timer == 50000)
@@ -699,7 +699,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
   void hcca_writeByte(uint8_t c) {
 
     NABU_DisableInterrupts();
-    
+
     uint8_t origIntMask = ayRead(IOPORTA);
 
     ayWrite(IOPORTA, INT_MASK_HCCATX);
@@ -743,7 +743,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
   }
 
   void hcca_writeString(uint8_t *str) {
-    
+
     for (unsigned int i = 0; str[i] != 0x00; i++)
       hcca_writeByte(str[i]);
   }
@@ -764,7 +764,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
 
 // **************************************************************************
-// VDP 
+// VDP
 // ---
 // **************************************************************************
 
@@ -795,7 +795,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     __asm
 
-      push af;      
+      push af;
 
     // _vdpStatus = IO_VDPLATCH;
       in	a, (_IO_VDPLATCH)
@@ -805,7 +805,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       ld  a, 0x01
       ld  (_vdpIsReady), a
 
-      pop af;      
+      pop af;
 
       ei;
       reti;
@@ -826,7 +826,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     __endasm;
 
     uint8_t origIntMask = ayRead(IOPORTA);
-    
+
     origIntMask |= INT_MASK_VDP;
 
     ayWrite(IOPORTA, origIntMask);
@@ -834,7 +834,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     NABU_EnableInterrupts();
 
     _vdpInterruptEnabled = true;
-    vdp_setRegister(1, _vdpReg1Val | 0b00100000 );   
+    vdp_setRegister(1, _vdpReg1Val | 0b00100000 );
   }
 
   void vdp_waitVDPReadyInt(void) {
@@ -903,10 +903,10 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     NABU_EnableInterrupts();
 
-    _vdpInterruptEnabled = true;        
-    vdp_setRegister(1, _vdpReg1Val | 0b00100000 );   
+    _vdpInterruptEnabled = true;
+    vdp_setRegister(1, _vdpReg1Val | 0b00100000 );
   }
-  
+
   void vdp_removeISR(void) {
 
     vdp_setRegister(1, _vdpReg1Val);
@@ -942,24 +942,24 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     vdp_cursor.x = 0;
     vdp_cursor.y = 0;
-    
+
     switch (mode) {
 
       case VDP_MODE_G2:
 
-        vdp_setRegister(0, 0b00000010); 
+        vdp_setRegister(0, 0b00000010);
 
-        _vdpReg1Val = 0b11000000 | (big_sprites << 1) | magnify; 
-        vdp_setRegister(1, _vdpReg1Val); 
+        _vdpReg1Val = 0b11000000 | (big_sprites << 1) | magnify;
+        vdp_setRegister(1, _vdpReg1Val);
 
         vdp_setRegister(2, 0x06);
-        _vdpPatternNameTableAddr = 0x1800;     
+        _vdpPatternNameTableAddr = 0x1800;
 
         if (_vdpSplitThirds)
           vdp_setRegister(4, 0x03);
         else
           vdp_setRegister(4, 0x00);
-        
+
         _vdpPatternGeneratorTableAddr = 0x00;
 
         fgColor = 0;
@@ -971,13 +971,13 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
       case VDP_MODE_TEXT40:
 
-        vdp_setRegister(0, 0b00000000); 
+        vdp_setRegister(0, 0b00000000);
 
         _vdpReg1Val = 0b11010010;
         vdp_setRegister(1, _vdpReg1Val);
 
         vdp_setRegister(2, 0x06);
-        _vdpPatternNameTableAddr = 0x1800;     
+        _vdpPatternNameTableAddr = 0x1800;
 
         vdp_setRegister(4, 0x00);
         _vdpPatternGeneratorTableAddr = 0x00;
@@ -992,10 +992,10 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
         vdp_setRegister(0, 0x04);
 
         _vdpReg1Val = 0xD2;
-        vdp_setRegister(1, _vdpReg1Val); 
+        vdp_setRegister(1, _vdpReg1Val);
 
         vdp_setRegister(2, 0b00000111); // pattern name table address (0x1000)
-        _vdpPatternNameTableAddr = 0x1000;     
+        _vdpPatternNameTableAddr = 0x1000;
 
         vdp_setRegister(4, 0x00);       // pattern geneerator address (0x0000)
 
@@ -1006,13 +1006,13 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
         break;
       case VDP_MODE_MULTICOLOR:
 
-        vdp_setRegister(0, 0b00000000); 
+        vdp_setRegister(0, 0b00000000);
 
         _vdpReg1Val = 0b11001000 | (big_sprites << 1) | magnify;
-        vdp_setRegister(1, _vdpReg1Val); 
+        vdp_setRegister(1, _vdpReg1Val);
 
         vdp_setRegister(2, 0x06);
-        _vdpPatternNameTableAddr = 0x1800;     
+        _vdpPatternNameTableAddr = 0x1800;
 
         vdp_setRegister(4, 0x00);
         _vdpPatternGeneratorTableAddr = 0x00;
@@ -1048,19 +1048,19 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     vdp_setWriteAddress(0x00);
 
     for (uint16_t i = 0; i < 0x3FFF; i++)
-      IO_VDPDATA = 0;  
+      IO_VDPDATA = 0;
   }
 
   void vdp_initMSXMode(uint8_t bgColor) {
 
     // https://konamiman.github.io/MSX2-Technical-Handbook/md/Appendix5.html#screen-1--graphic-1
 
-    vdp_setRegister(0, 0b00000010); 
-    vdp_setRegister(1, 0b11000000); 
+    vdp_setRegister(0, 0b00000010);
+    vdp_setRegister(1, 0b11000000);
     vdp_setRegister(2, 0x06);
-    vdp_setRegister(3, 0xff); // <- ALL LIES! how is 0xff 0x2000? 
+    vdp_setRegister(3, 0xff); // <- ALL LIES! how is 0xff 0x2000?
     vdp_setRegister(4, 0x03);
-    vdp_setRegister(5, 0x36); 
+    vdp_setRegister(5, 0x36);
     vdp_setRegister(6, 0x07);
 
     vdp_setRegister(7, bgColor & 0x0f);
@@ -1087,7 +1087,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
   }
 
   void vdp_clearScreen(void) {
-      
+
     vdp_setWriteAddress(_vdpPatternNameTableAddr);
 
     uint8_t *start = _vdp_textBuffer;
@@ -1127,7 +1127,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
   }
 
   void vdp_clearRows(uint8_t topRow, uint8_t bottomRow) {
-    
+
     uint16_t name_offset = topRow * _vdpCursorMaxXFull;
 
     vdp_setWriteAddress(_vdpPatternNameTableAddr + name_offset);
@@ -1136,7 +1136,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     uint8_t *end   = _vdp_textBuffer + (bottomRow * _vdpCursorMaxXFull);
 
     do {
-      
+
       IO_VDPDATA = 0x20;
 
       *start = 0x20;
@@ -1189,7 +1189,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     vdp_setWriteAddress(_vdpPatternNameTableAddr + name_offset);
     _vdp_textBuffer[name_offset] = patternId;
-    
+
     IO_VDPDATA = patternId;
   }
 
@@ -1208,7 +1208,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       start++;
     } while (start != end);
 
-    if (_vdpSplitThirds) { 
+    if (_vdpSplitThirds) {
 
       vdp_setWriteAddress(_vdpPatternGeneratorTableAddr + 2048 + ((uint16_t)patternId * 8));
       start = pattern;
@@ -1245,7 +1245,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       start++;
     } while (start != end);
 
-    if (_vdpSplitThirds) { 
+    if (_vdpSplitThirds) {
 
       vdp_setWriteAddress(_vdpPatternGeneratorTableAddr + 2048);
       start = patternTable;
@@ -1272,7 +1272,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     // datasheet 2-20 : screen is split into 3 and the color table therefore is repeated 3 times
     uint8_t *start = color;
     uint8_t *end = start + 8;
-      
+
     vdp_setWriteAddress(_vdpColorTableAddr + ((uint16_t)patternId * 8));
     do {
 
@@ -1308,7 +1308,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     // datasheet 2-20 : screen is split into 3 and the color table therefore is repeated 3 times
     uint8_t *start = colorTable;
     uint8_t *end = colorTable + len;
-      
+
     vdp_setWriteAddress(_vdpColorTableAddr);
     do {
 
@@ -1413,7 +1413,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
       if ((x & 1) == 0) {
 
-        // Even 
+        // Even
         color_ &= 0x0F;
         color_ |= (color << 4);
       } else {
@@ -1452,15 +1452,15 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
       uint16_t end = numSprites * 32;
 
-      for (uint16_t i = 0; i < end; i++) 
+      for (uint16_t i = 0; i < end; i++)
         IO_VDPDATA = sprite[i];
     } else {
 
       vdp_setWriteAddress(_vdpSpriteGeneratorTableAddr);
 
       uint16_t end = numSprites * 8;
-      
-      for (uint16_t i = 0; i < end; i++) 
+
+      for (uint16_t i = 0; i < end; i++)
         IO_VDPDATA = sprite[i];
     }
   }
@@ -1470,9 +1470,9 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     uint16_t addr = _vdpSpriteAttributeTableAddr + 4 * id;
 
     vdp_setWriteAddress(addr);
-    
+
     IO_VDPDATA = y; // y
-    
+
     IO_VDPDATA = x; // x
 
     if (_vdpSpriteSizeSelected)
@@ -1540,22 +1540,22 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
   void vdp_printJustified(uint8_t *text, uint8_t leftMargin, uint8_t rightMargin) {
 
-    while (*text != 0x00) { 
+    while (*text != 0x00) {
 
       if (*text == ' ') {
 
-        text++;  
+        text++;
 
         uint8_t *startOfNextWord = text;
 
         // Find the length of the next word
-        while (*startOfNextWord != ' '  && 
-              *startOfNextWord != '.'  && 
+        while (*startOfNextWord != ' '  &&
+              *startOfNextWord != '.'  &&
               *startOfNextWord != ','  &&
               *startOfNextWord != '!'  &&
-              *startOfNextWord != 0x00) 
+              *startOfNextWord != 0x00)
           startOfNextWord++;
-        
+
         // Calculate the length of the next word
         uint8_t nextWordLength = startOfNextWord - text;
 
@@ -1579,7 +1579,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
       vdp_write(*text);
 
-      text++; 
+      text++;
     }
   }
 
@@ -1689,10 +1689,10 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
   void vdp_writeCharAtLocation(uint8_t x, uint8_t y, uint8_t c) {
 
-    uint16_t name_offset = y * _vdpCursorMaxXFull + x; 
+    uint16_t name_offset = y * _vdpCursorMaxXFull + x;
 
     _vdp_textBuffer[name_offset] = c;
-      
+
     vdp_setWriteAddress(_vdpPatternNameTableAddr + name_offset);
 
     IO_VDPDATA = c;
@@ -1700,7 +1700,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
   uint8_t vdp_getCharAtLocationVRAM(uint8_t x, uint8_t y) {
 
-    uint16_t name_offset = y * _vdpCursorMaxXFull + x; 
+    uint16_t name_offset = y * _vdpCursorMaxXFull + x;
 
     vdp_setReadAddress(_vdpPatternNameTableAddr + name_offset);
 
@@ -1727,7 +1727,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       push de;
 
       ld hl, __vdp_textBuffer;
-      ld de, (__vdpTextBufferSize); 
+      ld de, (__vdpTextBufferSize);
 
       vdp_refreshViewPortLoop3:
 
@@ -1737,8 +1737,8 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
         inc hl;
         dec de;
 
-        ld A, D;                 
-        or E;                   
+        ld A, D;
+        or E;
         jp nz, vdp_refreshViewPortLoop3;
 
       pop de;
@@ -1763,7 +1763,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       to++;
       from++;
     } while (from != end);
-    
+
     do {
 
       *to = 0x20;
@@ -1786,7 +1786,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       toPtr--;
       fromPtr--;
     } while (fromPtr != endPtr);
-        
+
     do {
 
       *toPtr = 0x20;

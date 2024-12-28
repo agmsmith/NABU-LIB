@@ -3,15 +3,15 @@
 //
 // DJ Sures (c) 2024
 // https://nabu.ca
-// 
+//
 // Last updated on 2024.03.31.00
-// 
+//
 // Get latest copy and examples from: https://github.com/DJSures/NABU-LIB
 //
 // Control the CPM Drive manager features of the Internet Adapter
-// 
+//
 // Read the summaries below for details of each function in this file.
-// 
+//
 // **********************************************************************************************
 
 #ifndef RETRONET_CPM_FILE_STORE_H

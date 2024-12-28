@@ -3,15 +3,15 @@
 //
 // DJ Sures (c) 2024
 // https://nabu.ca
-// 
+//
 // Last updated on 2024.03.31.00
-// 
+//
 // Get latest copy and examples from: https://github.com/DJSures/NABU-LIB
 //
-// This is a lightweight NABU music tracker. 
-// 
+// This is a lightweight NABU music tracker.
+//
 // Read the summaries below for details of each function in this file.
-// 
+//
 // Make something,
 // DJ Sures
 // **********************************************************************************************
