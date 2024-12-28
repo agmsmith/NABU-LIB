@@ -116,13 +116,13 @@ static void nt_init(const uint16_t *song);
 //     // ... other game logic ...
 //   }
 // ***************************************************************************
-static void nt_handleNote(void);
+extern void nt_handleNote(void);
 
 // ***************************************************************************
 // Stop all sounds because you're done playing music.
 // This immediately mutes all AY-3-8910 channels used by the tracker.
 // ***************************************************************************
-static void nt_stopSounds(void);
+extern void nt_stopSounds(void);
 
 #include "NabuTracker.c"
 

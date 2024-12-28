@@ -3,15 +3,15 @@
 //
 // DJ Sures (c) 2024
 // https://nabu.ca
-// 
+//
 // Last updated on v2024.05.18.00
-// 
+//
 // Get latest copy and examples from: https://github.com/DJSures/NABU-LIB
 //
 // Interface for controlling the Internet Adapter settings from the NABU
-// 
+//
 // Read the summaries below for details of each function in this file.
-// 
+//
 // **********************************************************************************************
 
 #ifndef RETRONET_IA_FILE_STORE_H
@@ -23,7 +23,7 @@
 
 uint8_t _ia_TmpOriginalInterrupt = 0;
 
-void ia_focusInterrupts() {
+void ia_focusInterrupts(void) {
 
   // temporarily disable all other interrupts while we perform an expensive hcca read
   // we let hcca_writeByte set the interrupt for us
@@ -35,7 +35,7 @@ void ia_focusInterrupts() {
   ayWrite(IOPORTA, INT_MASK_HCCARX);
 }
 
-void ia_restoreInterrupts() {
+void ia_restoreInterrupts(void) {
 
   ayWrite(IOPORTA, _ia_TmpOriginalInterrupt);
 
@@ -45,7 +45,7 @@ void ia_restoreInterrupts() {
 // -----------------------------------------------------------
 // Get the number of items at the parent level of nabu channels
 // -----------------------------------------------------------
-uint8_t ia_getParentCount() {
+uint8_t ia_getParentCount(void) {
 
   ia_focusInterrupts();
 
@@ -165,7 +165,7 @@ void ia_getChildName2(uint8_t parentId, uint16_t childId, uint8_t *titleBuf) {
 // Set the selection in the NABU Channels
 // -----------------------------------------------------------
 void ia_setSelection2(uint8_t parentId, uint16_t childId) {
-  
+
   hcca_writeByte(0xba); // ia_control
 
   hcca_writeByte(0x1a);
@@ -372,7 +372,7 @@ void ia_getNewsDate(uint8_t *dateBuff) {
 // -----------------------------------------------------------
 // Get the number of news articles
 // -----------------------------------------------------------
-uint8_t ia_extended_getNewsCount() {
+uint8_t ia_extended_getNewsCount(void) {
 
   // 0x0e
   ia_focusInterrupts();
@@ -404,7 +404,7 @@ void ia_extended_getNewsContentById(uint8_t id, uint8_t *newsBuff) {
 
   hcca_writeByte(0x0f); // ia_extended_getNewsContentById
 
-  hcca_writeByte(id); 
+  hcca_writeByte(id);
 
   uint16_t readCnt = hcca_readUInt16();
 
@@ -514,7 +514,7 @@ void ia_extended_getNewsIconTilePattern(uint8_t id, uint8_t *patternBuff) {
 // 2 = Linux
 // 99 = Unknown
 // -----------------------------------------------------------
-uint8_t ia_extended_getOperatingSystem() {
+uint8_t ia_extended_getOperatingSystem(void) {
 
   // 0x14
   ia_focusInterrupts();
@@ -534,7 +534,7 @@ uint8_t ia_extended_getOperatingSystem() {
 // Get the current date/time as a string in the specified format
 // Send blank dateformat with 0 bytes for a default string.
 //
-// Examples: 
+// Examples:
 //   "dddd, MMMM dd" outputs "Sunday, April 14"
 //   "yyyy-MM-dd HH:mm:ss" outputs "2024-04-14 19:04:01"
 //   "HH:mm:ss" outputs 19:04:01
@@ -565,7 +565,7 @@ uint8_t ia_extended_getOperatingSystem() {
 // zzz: Time zone offset in hours and minutes.
 // zz: Time zone offset in hours.
 // z: Hours of time zone offset.
-// 
+//
 // *Note: the dateBuff must be 64 bytes long
 // -----------------------------------------------------------
 void ia_getCurrentDateTimeStr(uint8_t *dateFormatStr, uint8_t dateFormatStrLen, uint8_t *dateBuff) {
@@ -616,7 +616,7 @@ void ia_getAdapterVersion(uint8_t *versionStr) {
 // -----------------------------------------------------------
 // Returns true or false if a new version is available
 // -----------------------------------------------------------
-bool ia_getNewVersionAvailable() {
+bool ia_getNewVersionAvailable(void) {
 
   ia_focusInterrupts();
 

@@ -2,7 +2,7 @@
 // NABU-LIB C Library
 // DJ Sures (c) 2024
 // https://nabu.ca
-// 
+//
 // Read the NABU-LIB.h file for details of each function in this file.
 //
 // **********************************************************************************************
@@ -20,7 +20,7 @@ uint8_t _rnFS_INT_BACKUP = 0;
 // will focus entirely on hcca data transfer for optimal speed. Interrupts
 // use too many cycles for large amounts of data.
 // **************************************************************************
-void hcca_DiFocusInterrupts() {
+void hcca_DiFocusInterrupts(void) {
 
   NABU_DisableInterrupts();
 
@@ -29,7 +29,7 @@ void hcca_DiFocusInterrupts() {
   ayWrite(IOPORTA, INT_MASK_HCCARX);
 }
 
-void hcca_DiRestoreInterrupts() {
+void hcca_DiRestoreInterrupts(void) {
 
   ayWrite(IOPORTA, _rnFS_INT_BACKUP);
 
@@ -37,7 +37,7 @@ void hcca_DiRestoreInterrupts() {
 }
 
 void hcca_DiWriteByte(uint8_t c) {
-  
+
   ayWrite(IOPORTA, INT_MASK_HCCATX);
 
   IO_AYLATCH = IOPORTB;
@@ -77,7 +77,7 @@ void hcca_DiWriteInt16(int16_t val) {
 }
 
 void hcca_DiWriteString(uint8_t *str) {
-  
+
   for (uint8_t *start = str; *start != 0x00; start++)
     hcca_DiWriteByte(*start);
 }
@@ -97,33 +97,33 @@ void hcca_DiWriteBytes(uint16_t offset, uint16_t length, uint8_t *bytes) {
 
 // -----------------------------------------------------------------------------------
 
-inline uint8_t hcca_DiReadByte() {
+inline uint8_t hcca_DiReadByte(void) {
 
   IO_AYLATCH = IOPORTB;
   while (IO_AYDATA & 0x02);
   return IO_HCCA;
 }
 
-uint16_t hcca_DiReadUInt16() {
+uint16_t hcca_DiReadUInt16(void) {
 
   return  (uint16_t)hcca_DiReadByte() |
          ((uint16_t)hcca_DiReadByte() << 8);
 }
 
-int16_t hcca_DiReadInt16() {
+int16_t hcca_DiReadInt16(void) {
 
   return  (int16_t)hcca_DiReadByte() |
          ((int16_t)hcca_DiReadByte() << 8);
 }
 
-uint32_t hcca_DiReadUInt32() {
+uint32_t hcca_DiReadUInt32(void) {
 
   uint8_t ret[4] = { hcca_DiReadByte(), hcca_DiReadByte(), hcca_DiReadByte(), hcca_DiReadByte() };
 
   return *((uint32_t *)ret);
 }
 
-int32_t hcca_DiReadInt32() {
+int32_t hcca_DiReadInt32(void) {
 
   uint8_t ret[4] = { hcca_DiReadByte(), hcca_DiReadByte(), hcca_DiReadByte(), hcca_DiReadByte() };
 
@@ -223,7 +223,7 @@ uint16_t rn_FileRead(uint8_t filenameLen, uint8_t* filename, uint8_t* buffer, ui
 
   uint16_t toRead = hcca_DiReadUInt16();
   uint8_t *end    = start + toRead;
-  
+
   while (start != end) {
 
     while (IO_AYDATA & 0x02);
@@ -289,7 +289,7 @@ uint16_t rn_fileHandleRead(uint8_t fileHandle, uint8_t* buffer, uint16_t bufferO
 
   uint16_t toRead = hcca_DiReadUInt16();
   uint8_t *end    = start + toRead;
-  
+
   while (start != end) {
 
     while (IO_AYDATA & 0x02);
@@ -441,9 +441,9 @@ uint16_t rn_fileList(uint8_t pathLen, uint8_t* path, uint8_t wildcardLen, uint8_
 void rn_fileListItem(uint16_t fileItemIndex, FileDetailsStruct* s) {
 
   // 0xb2
-  // 
+  //
   // The response is 83 bytes and structured like so...
-  // 
+  //
   // Bytes       Type      Description
   // ----------  --------  ------------------------------------
   // 0, 1, 2, 3  int32_t   Filesize (or -1 for a folder)
@@ -584,7 +584,7 @@ uint16_t rn_fileHandleReadSeq(uint8_t fileHandle, uint8_t* buffer, uint16_t buff
 
   uint16_t toRead = hcca_DiReadUInt16();
   uint8_t *end    = start + toRead;
-  
+
   while (start != end) {
 
     while (IO_AYDATA & 0x02);
@@ -814,7 +814,7 @@ int32_t rn_TCPHandleRead(uint8_t tcpHandle, uint8_t* buffer, uint16_t bufferOffs
   if (toRead > 0) {
 
     uint8_t *end = start + toRead;
-    
+
     do {
 
       while (IO_AYDATA & 0x02);
@@ -864,7 +864,7 @@ int32_t rn_TCPHandleWrite(uint8_t tcpHandle, uint16_t dataOffset, uint16_t dataL
 // The IA TCP Server can be configured in the Internet Adapter settings
 // **************************************************************************
 
-uint8_t rn_TCPServerClientCnt() {
+uint8_t rn_TCPServerClientCnt(void) {
 
   // 0xd5
 
@@ -879,7 +879,7 @@ uint8_t rn_TCPServerClientCnt() {
   return t;
 }
 
-uint8_t rn_TCPServerAvailable() {
+uint8_t rn_TCPServerAvailable(void) {
 
   // 0xd6
 
@@ -911,7 +911,7 @@ uint8_t rn_TCPServerRead(uint8_t* buffer, uint16_t bufferOffset, uint8_t readLen
   if (toRead > 0) {
 
     uint8_t *end = start + toRead;
-    
+
     do {
 
       while (IO_AYDATA & 0x02);

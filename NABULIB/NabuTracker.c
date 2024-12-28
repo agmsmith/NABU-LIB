@@ -1,7 +1,7 @@
 static void nt_init(const uint16_t *song) {
 
   _song = song;
-  
+
   _itemCntr = 0;
   _beatCntr = 0;
 
@@ -17,7 +17,7 @@ static void nt_init(const uint16_t *song) {
   ayWrite(10, 0);
 }
 
-static void nt_stopSounds(void) {
+void nt_stopSounds(void) {
 
   // Immediately mute all channels by setting amplitudes to zero.
   // Mixer and tone/noise configuration are left as-is on purpose,
@@ -27,7 +27,7 @@ static void nt_stopSounds(void) {
   ayWrite(10, 0);
 }
 
-static void nt_handleNote(void) {
+void nt_handleNote(void) {
 
   // Defensive: if nt_init() was never called, _song is NULL (static
   // zero-init) and dereferencing it would feed garbage into the AY
@@ -114,7 +114,7 @@ static void nt_handleNote(void) {
         // explicitly set the desired volume for the next hit.
 
         ayWrite(8,  0);
-        
+
         if (song[_itemCntr + 1]) {
 
           // Note (tone) mode on all channels
@@ -128,10 +128,10 @@ static void nt_handleNote(void) {
         }
 
         _itemCntr += 2;
-        
+
         break;
       }
-      
+
       case NT_LOOP: {
 
         // Loop back to the beginning of the song.
@@ -139,7 +139,7 @@ static void nt_handleNote(void) {
         // then processing continues within the same tick so that
         // the first beat of the loop can be played without a gap.
         _itemCntr = 0;
-        
+
         _beatCntr = 0;
 
         break;
