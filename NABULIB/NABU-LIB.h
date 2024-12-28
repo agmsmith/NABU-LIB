@@ -306,13 +306,9 @@ volatile uint8_t _randomSeed = 0;
   volatile uint8_t _rxBuffer[256];
   volatile uint8_t _rxBufferReadPos  = 0;
   volatile uint8_t _rxBufferWritePos = 0;
-  #warning
   #warning HCCA Interupt: Enabled
-  #warning
 #else
-  #warning
   #warning HCCA Interrupt: Disabled
-  #warning
 #endif
 
 #ifndef DISABLE_KEYBOARD_INT
@@ -331,13 +327,9 @@ volatile uint8_t _randomSeed = 0;
     Joy_Button = 0b00010000,
   };
 
-  #warning
   #warning Keyboard Interupt Enabled. Use NABU-LIB keyboard functions only (no CPM STDIN)
-  #warning
 #else
-  #warning
   #warning Keyboard Interupt Disabled. If building for CPM, uses C STDIN stdio/conio functions for keyboard.
-  #warning
 #endif
 
 
@@ -505,17 +497,9 @@ volatile uint8_t _randomSeed = 0;
   // 5th sprite flag, set when more than 4 sprite per line
   #define VDP_FLAG_S5 0b01000000
 
-
-  #warning
   #warning VDP has been enabled. If using CPM, you can mix STDOUT and NABU-LIB vdp functions.
-  #warning
-
 #else
-
-  #warning
   #warning VDP has been disabled. If using CPM, you must use STDOUT functions (i.e. printf, fputs, etc). NABU-LIB vdp functions are not available
-  #warning
-
 #endif
 
 
