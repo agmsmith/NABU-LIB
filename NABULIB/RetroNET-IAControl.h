@@ -3,15 +3,15 @@
 //
 // DJ Sures (c) 2024
 // https://nabu.ca
-// 
+//
 // Last updated on v2024.05.18.00
-// 
+//
 // Get latest copy and examples from: https://github.com/DJSures/NABU-LIB
 //
 // Interface for controlling the Internet Adapter settings from the NABU
-// 
+//
 // Read the summaries below for details of each function in this file.
-// 
+//
 // **********************************************************************************************
 
 #ifndef RETRONET_IA_FILE_STORE_H
@@ -165,7 +165,7 @@ void ia_getChildName2(uint8_t parentId, uint16_t childId, uint8_t *titleBuf) {
 // Set the selection in the NABU Channels
 // -----------------------------------------------------------
 void ia_setSelection2(uint8_t parentId, uint16_t childId) {
-  
+
   hcca_writeByte(0xba); // ia_control
 
   hcca_writeByte(0x1a);
@@ -404,7 +404,7 @@ void ia_extended_getNewsContentById(uint8_t id, uint8_t *newsBuff) {
 
   hcca_writeByte(0x0f); // ia_extended_getNewsContentById
 
-  hcca_writeByte(id); 
+  hcca_writeByte(id);
 
   uint16_t readCnt = hcca_readUInt16();
 
@@ -534,7 +534,7 @@ uint8_t ia_extended_getOperatingSystem(void) {
 // Get the current date/time as a string in the specified format
 // Send blank dateformat with 0 bytes for a default string.
 //
-// Examples: 
+// Examples:
 //   "dddd, MMMM dd" outputs "Sunday, April 14"
 //   "yyyy-MM-dd HH:mm:ss" outputs "2024-04-14 19:04:01"
 //   "HH:mm:ss" outputs 19:04:01
@@ -565,7 +565,7 @@ uint8_t ia_extended_getOperatingSystem(void) {
 // zzz: Time zone offset in hours and minutes.
 // zz: Time zone offset in hours.
 // z: Hours of time zone offset.
-// 
+//
 // *Note: the dateBuff must be 64 bytes long
 // -----------------------------------------------------------
 void ia_getCurrentDateTimeStr(uint8_t *dateFormatStr, uint8_t dateFormatStrLen, uint8_t *dateBuff) {
