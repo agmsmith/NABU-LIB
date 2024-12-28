@@ -20,7 +20,7 @@ uint8_t _rnFS_INT_BACKUP = 0;
 // will focus entirely on hcca data transfer for optimal speed. Interrupts
 // use too many cycles for large amounts of data.
 // **************************************************************************
-void hcca_DiFocusInterrupts() {
+void hcca_DiFocusInterrupts(void) {
 
   NABU_DisableInterrupts();
 
@@ -29,7 +29,7 @@ void hcca_DiFocusInterrupts() {
   ayWrite(IOPORTA, INT_MASK_HCCARX);
 }
 
-void hcca_DiRestoreInterrupts() {
+void hcca_DiRestoreInterrupts(void) {
 
   ayWrite(IOPORTA, _rnFS_INT_BACKUP);
 
@@ -97,33 +97,33 @@ void hcca_DiWriteBytes(uint16_t offset, uint16_t length, uint8_t *bytes) {
 
 // -----------------------------------------------------------------------------------
 
-inline uint8_t hcca_DiReadByte() {
+inline uint8_t hcca_DiReadByte(void) {
 
   IO_AYLATCH = IOPORTB;
   while (IO_AYDATA & 0x02);
   return IO_HCCA;
 }
 
-uint16_t hcca_DiReadUInt16() {
+uint16_t hcca_DiReadUInt16(void) {
 
   return  (uint16_t)hcca_DiReadByte() |
          ((uint16_t)hcca_DiReadByte() << 8);
 }
 
-int16_t hcca_DiReadInt16() {
+int16_t hcca_DiReadInt16(void) {
 
   return  (int16_t)hcca_DiReadByte() |
          ((int16_t)hcca_DiReadByte() << 8);
 }
 
-uint32_t hcca_DiReadUInt32() {
+uint32_t hcca_DiReadUInt32(void) {
 
   uint8_t ret[4] = { hcca_DiReadByte(), hcca_DiReadByte(), hcca_DiReadByte(), hcca_DiReadByte() };
 
   return *((uint32_t *)ret);
 }
 
-int32_t hcca_DiReadInt32() {
+int32_t hcca_DiReadInt32(void) {
 
   uint8_t ret[4] = { hcca_DiReadByte(), hcca_DiReadByte(), hcca_DiReadByte(), hcca_DiReadByte() };
 
@@ -739,7 +739,7 @@ int32_t rn_TCPHandleWrite(uint8_t tcpHandle, uint16_t dataOffset, uint16_t dataL
 // The IA TCP Server can be configured in the Internet Adapter settings
 // **************************************************************************
 
-uint8_t rn_TCPServerClientCnt() {
+uint8_t rn_TCPServerClientCnt(void) {
 
   // 0xd5
 
@@ -754,7 +754,7 @@ uint8_t rn_TCPServerClientCnt() {
   return t;
 }
 
-uint8_t rn_TCPServerAvailable() {
+uint8_t rn_TCPServerAvailable(void) {
 
   // 0xd6
 
