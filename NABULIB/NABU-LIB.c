@@ -15,7 +15,7 @@
 // ------
 // **************************************************************************
 
-void initNABULib() {
+void initNABULib(void) {
 
   // Turn off the rom
   IO_CONTROL = CONTROL_ROMSEL | CONTROL_VDOBUF;
@@ -106,7 +106,7 @@ void initNABULib() {
   initNABULIBAudio();
 }
 
-void initNABULIBAudio() {
+void initNABULIBAudio(void) {
 
   // Noise envelope
   ayWrite(6, 0b00000000);
@@ -124,7 +124,7 @@ void initNABULIBAudio() {
   ayWrite(13, 0);
 }
 
-void nop() __naked {
+void nop(void) __naked {
 
   __asm
 
@@ -135,7 +135,7 @@ void nop() __naked {
   __endasm;
 }
 
-void NABU_DisableInterrupts() __naked {
+void NABU_DisableInterrupts(void) __naked {
 
   __asm
 
@@ -146,7 +146,7 @@ void NABU_DisableInterrupts() __naked {
   __endasm;
 }
 
-void NABU_EnableInterrupts() __naked {
+void NABU_EnableInterrupts(void) __naked {
 
   __asm
 
@@ -185,7 +185,7 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
 // **************************************************************************
 
 #ifndef DISABLE_HCCA_RX_INT  
-  void isrHCCARX() __naked {
+  void isrHCCARX(void) __naked {
 
     // review LIS and only bc, hl, a registers are used for this function
     __asm
@@ -222,7 +222,7 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
 #endif 
 
 #ifndef DISABLE_KEYBOARD_INT
-  void isrKeyboard() __naked {
+  void isrKeyboard(void) __naked {
 
     __asm
       push bc;
@@ -284,17 +284,17 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
   // ------------------
   // **************************************************************************
 
-  void vt_clearToEndOfScreen() {
+  void vt_clearToEndOfScreen(void) {
 
     printf("%cJ", 27);
   }
 
-  void vt_clearToEndOfLine() {
+  void vt_clearToEndOfLine(void) {
 
     printf("%cK", 27);
   }
 
-  void vt_clearScreen() {
+  void vt_clearScreen(void) {
 
     if (_EMULATION_MODE == 0)
       putchar(26);
@@ -302,17 +302,17 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
       printf("%cE", 27);
   }
 
-  void vt_clearLine() {
+  void vt_clearLine(void) {
 
     printf("%cl", 27);
   }
 
-  void vt_clearToStartOfLine() {
+  void vt_clearToStartOfLine(void) {
 
     printf("%co", 27);
   }
 
-  void vt_clearToStartOfScreen() {
+  void vt_clearToStartOfScreen(void) {
 
     printf("%cd", 27);
   }
@@ -326,7 +326,7 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
         printf("%cB", 27);
   }
 
-  void vt_cursorHome() {
+  void vt_cursorHome(void) {
 
     printf("%cH", 27);
   }
@@ -358,7 +358,7 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
         printf("%cA", 27);
   }
 
-  void vt_deleteLine() {
+  void vt_deleteLine(void) {
 
     if (_EMULATION_MODE)
       printf("%cR", 27);
@@ -378,7 +378,7 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
     putchar(32 + x);
   }
 
-  void vt_insertLine() {
+  void vt_insertLine(void) {
 
     if (_EMULATION_MODE == 0)
       printf("%cE", 27);
@@ -386,7 +386,7 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
       printf("%cL", 27);
   }
 
-  void vt_restoreCursorPosition() {
+  void vt_restoreCursorPosition(void) {
 
     if (_EMULATION_MODE == 0)
       printf("%ck", 27);
@@ -401,37 +401,37 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
     putchar(color);
   }
 
-  void vt_saveCursorPosition() {
+  void vt_saveCursorPosition(void) {
 
     printf("%cj", 27);
   }
 
-  void vt_cursorUpAndInsert() {
+  void vt_cursorUpAndInsert(void) {
 
     printf("%cI", 27);
   }
 
-  void vt_wrapOff() {
+  void vt_wrapOff(void) {
 
     printf("%cw", 27);
   }
 
-  void vt_wrapOn() {
+  void vt_wrapOn(void) {
 
     printf("%cv", 27);
   }
 
-  void vt_normalVideo() {
+  void vt_normalVideo(void) {
 
     printf("%cq", 27);
   }
 
-  void vt_reverseVideo() {
+  void vt_reverseVideo(void) {
 
     printf("%cp", 27);
   }
 
-  bool isCloudCPM() {
+  bool isCloudCPM(void) {
 
     return _CLOUD_CPM_KEY == 0x55;
   }
@@ -514,12 +514,12 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
 #ifndef DISABLE_KEYBOARD_INT
 
-  uint8_t isKeyPressed() {
+  uint8_t isKeyPressed(void) {
 
     return (_kbdBufferWritePos != _kbdBufferReadPos);
   }
 
-  uint8_t getChar() {
+  uint8_t getChar(void) {
 
     #if defined(DISABLE_CURSOR) || defined(DISABLE_VDP)
 
@@ -613,7 +613,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
   // ------------
   // **************************************************************************
 
-  bool hcca_ping() {
+  bool hcca_ping(void) {
 
     hcca_writeByte(0xa1);
 
@@ -635,12 +635,12 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     return false;
   }
 
-  bool hcca_isRxBufferAvailable() {
+  bool hcca_isRxBufferAvailable(void) {
 
     return _rxBufferWritePos != _rxBufferReadPos;
   }
 
-  uint8_t hcca_getSizeOfDataInBuffer() {
+  uint8_t hcca_getSizeOfDataInBuffer(void) {
 
     // The rx ring buffer is exactly 256 bytes and the read/write positions
     // are uint8_t, so natural 8-bit wrap-around subtraction always yields
@@ -649,7 +649,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     return (uint8_t)(_rxBufferWritePos - _rxBufferReadPos);
   }
 
-  uint8_t hcca_readByte() {
+  uint8_t hcca_readByte(void) {
 
     while (_rxBufferWritePos == _rxBufferReadPos);
 
@@ -660,26 +660,26 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     return ret;
   }
 
-  uint16_t hcca_readUInt16() {
+  uint16_t hcca_readUInt16(void) {
 
     return (uint16_t)hcca_readByte() +
            ((uint16_t)hcca_readByte() << 8);
   }
 
-  int16_t hcca_readInt16() {
+  int16_t hcca_readInt16(void) {
 
     return (int16_t)hcca_readByte() +
            ((int16_t)hcca_readByte() << 8);
   }
 
-  uint32_t hcca_readUInt32() {
+  uint32_t hcca_readUInt32(void) {
 
     uint8_t ret[4] = { hcca_readByte(), hcca_readByte(), hcca_readByte(), hcca_readByte() };
 
     return *((uint32_t *)ret);
   }
 
-  int32_t hcca_readInt32() {
+  int32_t hcca_readInt32(void) {
 
     uint8_t ret[4] = { hcca_readByte(), hcca_readByte(), hcca_readByte(), hcca_readByte() };
 
@@ -810,7 +810,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     IO_VDPLATCH = (address >> 8);
   }
 
-  void waitVdpISR() __naked {
+  void waitVdpISR(void) __naked {
 
     __asm
 
@@ -832,7 +832,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     __endasm;
   }
 
-  void vdp_enableVDPReadyInt() {
+  void vdp_enableVDPReadyInt(void) {
 
     NABU_DisableInterrupts();
 
@@ -856,7 +856,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     vdp_setRegister(1, _vdpReg1Val | 0b00100000 );   
   }
 
-  void vdp_waitVDPReadyInt() {
+  void vdp_waitVDPReadyInt(void) {
 
     // uncomment this to enable debugging for the VDP to see if the vdpIsReady flag was
     // set prior to your program calling vdp_waitVDPReadyInt(). That means your program took
@@ -879,7 +879,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     while (!vdpIsReady);
   }
 
-  void vdp_disableVDPReadyInt() {
+  void vdp_disableVDPReadyInt(void) {
 
     vdp_setRegister(1, _vdpReg1Val);
 
@@ -900,7 +900,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     NABU_EnableInterrupts();
   }
 
-  void vdp_addISR(void (*isr)()) {
+  void vdp_addISR(void (*isr)(void)) {
 
     NABU_DisableInterrupts();
 
@@ -926,7 +926,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     vdp_setRegister(1, _vdpReg1Val | 0b00100000 );   
   }
   
-  void vdp_removeISR() {
+  void vdp_removeISR(void) {
 
     vdp_disableVDPReadyInt();
   }
@@ -1046,7 +1046,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     vdp_clearScreen();
   }
 
-  void vdp_clearVRAM() {
+  void vdp_clearVRAM(void) {
 
     // 16 KB of VRAM (0x0000 - 0x3FFF). Loop bound was 0x3FFF which left
     // the final byte uncleared, so use 0x4000 (full 16384 bytes).
@@ -1124,12 +1124,12 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     vdp_init(VDP_MODE_G2, 0, bgColor, bigSprites, scaleSprites, autoScroll, splitThirds);
   }
 
-  void vdp_initMultiColorMode() {
+  void vdp_initMultiColorMode(void) {
 
     vdp_init(VDP_MODE_MULTICOLOR, 0, 0, false, false, false, false);
   }
 
-  void vdp_clearScreen() {
+  void vdp_clearScreen(void) {
       
     vdp_setWriteAddress(_vdpPatternNameTableAddr);
 
@@ -1739,7 +1739,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     } while (start != end);
   }
 
-  void vdp_newLine() {
+  void vdp_newLine(void) {
 
     if (vdp_cursor.y == _autoScrollBottomRow) {
 
@@ -1845,7 +1845,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     _vdp_textBuffer[y * _vdpCursorMaxXFull + x] = c;
   }
 
-  void vdp_refreshViewPort() {
+  void vdp_refreshViewPort(void) {
 
     vdp_setWriteAddress(_vdpPatternNameTableAddr);
 
@@ -1980,3 +1980,4 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     vdp_print(str);
   }
 #endif
+

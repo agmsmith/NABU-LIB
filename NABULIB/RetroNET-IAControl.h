@@ -23,7 +23,7 @@
 
 uint8_t _ia_TmpOriginalInterrupt = 0;
 
-void ia_focusInterrupts() {
+void ia_focusInterrupts(void) {
 
   // temporarily disable all other interrupts while we perform an expensive hcca read
   // we let hcca_writeByte set the interrupt for us
@@ -35,7 +35,7 @@ void ia_focusInterrupts() {
   ayWrite(IOPORTA, INT_MASK_HCCARX);
 }
 
-void ia_restoreInterrupts() {
+void ia_restoreInterrupts(void) {
 
   ayWrite(IOPORTA, _ia_TmpOriginalInterrupt);
 
@@ -45,7 +45,7 @@ void ia_restoreInterrupts() {
 // -----------------------------------------------------------
 // Get the number of items at the parent level of nabu channels
 // -----------------------------------------------------------
-uint8_t ia_getParentCount() {
+uint8_t ia_getParentCount(void) {
 
   ia_focusInterrupts();
 
@@ -372,7 +372,7 @@ void ia_getNewsDate(uint8_t *dateBuff) {
 // -----------------------------------------------------------
 // Get the number of news articles
 // -----------------------------------------------------------
-uint8_t ia_extended_getNewsCount() {
+uint8_t ia_extended_getNewsCount(void) {
 
   // 0x0e
   ia_focusInterrupts();
@@ -514,7 +514,7 @@ void ia_extended_getNewsIconTilePattern(uint8_t id, uint8_t *patternBuff) {
 // 2 = Linux
 // 99 = Unknown
 // -----------------------------------------------------------
-uint8_t ia_extended_getOperatingSystem() {
+uint8_t ia_extended_getOperatingSystem(void) {
 
   // 0x14
   ia_focusInterrupts();
@@ -616,7 +616,7 @@ void ia_getAdapterVersion(uint8_t *versionStr) {
 // -----------------------------------------------------------
 // Returns true or false if a new version is available
 // -----------------------------------------------------------
-bool ia_getNewVersionAvailable() {
+bool ia_getNewVersionAvailable(void) {
 
   ia_focusInterrupts();
 
