@@ -2,15 +2,15 @@
 // NABU-LIB C Library - MAKE SOMETHING
 // DJ Sures (c) 2024
 // https://nabu.ca
-// 
+//
 // Last updated on 2024.04.01.00
-// 
+//
 // Get latest copy and examples from: https://github.com/DJSures/NABU-LIB
-// 
+//
 // This is a z88dk C library for the NABU Personal Computer. This is a large library
 // with many functions for the VDP, Sound, HCCA, and Keyboard. The functions are split
-// into sections based on the peripheral.  
-// 
+// into sections based on the peripheral.
+//
 // Read the summaries below for details of each function in this file.
 //
 // ----------------------------------------------------------------------------------------------
@@ -22,7 +22,7 @@
 //
 // Make something,
 // DJ Sures
-// 
+//
 // **********************************************************************************************
 
 // No touch
@@ -35,7 +35,7 @@
 
 
 // **************************************************************************
-// 
+//
 // BINARY TYPE
 // ===========
 // It is important to define what kind of binary we are going to be creating.
@@ -87,20 +87,20 @@
 
 
 // **************************************************************************
-// 
+//
 // CONFIGURE FONT or PATTERN TABLE
 // ===============================
-// 
+//
 // If you will be using the VDP, you will need either a default font or pattern table.
 // Loading just a font is smaller than an entire pattern table, but both options are
 // available to you. For just a textmode, that doesn't use CP/M's stdio, then you can
 // use vdp_loadASCIIFont() and supply an existing pattern.h font, or your custom one.
 //
-// The diference between a FONT and a PATTERN is the size. A FONT is just the visible 
+// The diference between a FONT and a PATTERN is the size. A FONT is just the visible
 // written 127 ASCII characters, starting at ASCII Decimal 37 (space bar). The PATTERN
 // is the entire pattern memory (256 characters) that include text and image patterns.
 // Generaly, if you're just using text, then load the vdp_loadASCIIFont() which can be used in
-// both G2 and Text mode. If you are using a pattern, check the VDP section for the 
+// both G2 and Text mode. If you are using a pattern, check the VDP section for the
 // load pattern functions.
 //
 //
@@ -121,7 +121,7 @@
 // --------------------
 // If you with to use your own font, specify the font as:
 //
-//    const uint8_t[768] ASCII = {} 
+//    const uint8_t[768] ASCII = {}
 //
 // Once your font has been created, add it with vdp_loadASCIIFont(ASCII);
 //
@@ -131,16 +131,16 @@
 
 
 // **************************************************************************
-// 
+//
 // KEYBOARD INPUT TYPE
 // ===================
-// 
+//
 // This disables the NABULIB keyboard input commands (i.e. isKeyPressed(), getChar(), readLine()).
 // When you disable the NABULIB keyboard input commands, you will have to use the CPM
 // input commands through stdio.h or conio.h
 //
-// If you are using CPM stdio, such as gets(), stdio.h or conio.h, you will need to 
-// disable the keyboard interupt in NABULIB. Add this #define above your 
+// If you are using CPM stdio, such as gets(), stdio.h or conio.h, you will need to
+// disable the keyboard interupt in NABULIB. Add this #define above your
 // #include in the main.c
 //
 // **************************************************************************
@@ -148,10 +148,10 @@
 
 
 // **************************************************************************
-// 
+//
 // HCCA (SERIAL)
 // =============
-// 
+//
 // If your program is not using the file store or HCCA for retronet, you can
 // disable the RX interrupt to save filesize.
 //
@@ -162,10 +162,10 @@
 
 
 // **************************************************************************
-// 
+//
 // VDP GRAPHICS
 // ============
-// 
+//
 // You can disable the vdp functions if you're just using the cpm built-in
 // console stuff, like puts() or printf(), etc.
 //
@@ -175,10 +175,10 @@
 
 
 // **************************************************************************
-// 
+//
 // DEBUG VDP INT
 // =============
-// 
+//
 // You can enable a debug to see if your code takes too long before the vdp interrupt
 // triggers. You see, you should only update the VDP before or after an interrupt.
 // Ideally directly after. This ensures the VDP ram is all happy comfortable for the
@@ -241,21 +241,21 @@
 // **************************************************************************
 // Special Function Registers
 // --------------------------
-// 
+//
 // These are special function register definitions where you can read and write
 // values to the ports. using these compiles to one line of assembly, OUT or IN,
 // which generates effecient assembly.
-// 
+//
 // *Note: For example, to send a value to PORTA
-// 
+//
 // IO_AYLATCH = IOPORTA;
 // IO_AYDATA = 0x04;
-// 
+//
 // *Note: For example to retrieve a value from PORTB
-// 
+//
 // IO_LATCH = IOPORTB;
 // return IO_AYDATA;
-// 
+//
 // **************************************************************************
 
 __sfr __at 0xA0 IO_VDPDATA;
@@ -339,16 +339,16 @@ volatile uint8_t _randomSeed = 0;
   #warning Keyboard Interupt Disabled. If building for CPM, uses C STDIN stdio/conio functions for keyboard.
   #warning
 #endif
- 
+
 
 // **************************************************************************
 // VDP Variables
 // -------------
-// 
+//
 // These are variables and definitions for the VDP functions, such as
-// cursor location, screen width/height for text calculations, and 
+// cursor location, screen width/height for text calculations, and
 // the text buffer.
-// 
+//
 // **************************************************************************
 #ifndef DISABLE_VDP
 
@@ -368,7 +368,7 @@ volatile uint8_t _randomSeed = 0;
   // This is because reading and writing the VDP vram is very slow
   // and it is quicker to keep 960 bytes in RAM to double buffer
   // the text mode.
-  // 
+  //
   // The amount of this buffer that is used based on the current mode is
   // stored in _vdpTextBufferSize
   // **************************************************************************
@@ -393,7 +393,7 @@ volatile uint8_t _randomSeed = 0;
   // **************************************************************************
   void (*_vdp_ISR)(void);
 
-  
+
   // **************************************************************************
   // The original value of the VDP Register 1 (i.e. graphic mode, memory, and interrupt status).
   // This is used for enabling/disabling interrupts progrmatically because we can't re-read
@@ -502,7 +502,7 @@ volatile uint8_t _randomSeed = 0;
   // Collision flag for vdp
   #define VDP_FLAG_COLLISION 0b00100000
 
-  // 5th sprite flag, set when more than 4 sprite per line 
+  // 5th sprite flag, set when more than 4 sprite per line
   #define VDP_FLAG_S5 0b01000000
 
 
@@ -524,7 +524,7 @@ volatile uint8_t _randomSeed = 0;
 // Generics
 // --------
 //
-// Here are some helper functions that are useful when 
+// Here are some helper functions that are useful when
 //
 // **************************************************************************
 
@@ -535,18 +535,18 @@ volatile uint8_t _randomSeed = 0;
 // **************************************************************************
 // Audio Notes
 // -----------
-// 
-// For performance, the notes are split into two unsigned 8-bit arrays rather 
+//
+// For performance, the notes are split into two unsigned 8-bit arrays rather
 // than having to bitshift a 16-bit value for each note.
 // When using the playNoteDelay(), pass the index value which is the first number
 // in the comment below. The equilevant midi note is also displayed, but that's
-// not the value you will pass to playNoteDelay(). 
-// 
+// not the value you will pass to playNoteDelay().
+//
 // 8, //   8, midi note: 44 (�G#2/Ab2�)
-//         ^ 
+//         ^
 //         this value you pass to playNoteDelay()
-// 
-// 
+//
+//
 // **************************************************************************
 
 const uint8_t _NOTES_COURSE[] = {
@@ -706,7 +706,7 @@ const uint8_t _NOTES_FINE[] = {
 // **************************************************************************
 // System
 // ------
-// 
+//
 // NABU helper functions.
 // **************************************************************************
 
@@ -742,17 +742,17 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n);
 // **************************************************************************
 // Sound
 // -----
-// 
-// Use the AY sound IC for generating audio. This defaults to initializing the 
+//
+// Use the AY sound IC for generating audio. This defaults to initializing the
 // AY in 3 channel tone mode, with no noise channel. The mixer is configured
 // for an fading envelope for convenience.
-// 
+//
 // To use the generic simple audio functions provided, use initNABULib()
 // at the beginning of your program.
-// 
+//
 // *Note: You can use the AY ports (IO_AYLATCH and IO_AYDATA) to configure
 // the AY chip yourself. Otherwise, you can use these simple helper functions.
-// 
+//
 // **************************************************************************
 
 // **************************************************************************
@@ -765,7 +765,7 @@ void initNABULIBAudio(void);
 
 // **************************************************************************
 // Play a note with delay envelope
-// 
+//
 // - Channel: 0, 1, 2
 // - Note: 0-71 (See note array above and use an index from it)
 // - DelayLength: 0-4096
@@ -789,9 +789,9 @@ inline uint8_t ayRead(uint8_t reg);
 // **************************************************************************
 // Keyboard
 // --------
-// 
+//
 // Get keys from the keyboard, which is also the joysticks.
-// 
+//
 // **************************************************************************
 #ifndef DISABLE_KEYBOARD_INT
 
@@ -809,11 +809,11 @@ inline uint8_t ayRead(uint8_t reg);
   // Read a line of text inputed by the keyboard. This does not null terminate the
   // user input. If you need the input null terminated, make the maxInputLen one byte
   // less than the buffer size, and manually set the 0x00 yourself after the return.
-  // 
+  //
   // - buffer is the pointer to store the text input
   // - maxInputLen is the max length of data you want to retrieve (no larger than the buffer!)
-  // 
-  // Returns the length of data entered by the user. 
+  //
+  // Returns the length of data entered by the user.
   // **************************************************************************
   uint8_t readLine(uint8_t* buffer, uint8_t maxInputLen);
 
@@ -827,15 +827,15 @@ inline uint8_t ayRead(uint8_t reg);
   //     Byte 2: Down
   // LSB Byte 1: Left
   //
-  // You can check for a direction by comparing the value against JOYSTICKENUM values. 
+  // You can check for a direction by comparing the value against JOYSTICKENUM values.
   // For example you can check if a button is pressed with this example. Same applies to directions...
   //
   //   if (getJoyStatus(0) & Joy_Button)
-  //  
+  //
   // or check a direction...
-  //  
+  //
   //   if (getJoyStatus(0) & Joy_Up)
-  //  
+  //
   // **************************************************************************
   inline uint8_t getJoyStatus(uint8_t joyNum);
 #endif
@@ -845,7 +845,7 @@ inline uint8_t ayRead(uint8_t reg);
   // **************************************************************************
   // VT52
   // ----------
-  // 
+  //
   // When using CPM STDOUT (i.e. printf, etc.) you can use the VT52 emulation built into the BIOS
   // You can also SET and GET the cursor in CPM by using cpm_cursor.x and cpm_cursor.y
   // **************************************************************************
@@ -863,22 +863,22 @@ inline uint8_t ayRead(uint8_t reg);
   // For Cloud CP/M to access the emulation mode
   // 0 ADM
   // 1 VT52
-  __at (0xff12) uint8_t _EMULATION_MODE; 
+  __at (0xff12) uint8_t _EMULATION_MODE;
 
   // 0 IA
   // 1 LPT
-  __at (0xff13) uint8_t _LIST_DEVICE; 
+  __at (0xff13) uint8_t _LIST_DEVICE;
 
   // Current screen color
   __at (0xff25) volatile uint8_t  _SCREEN_COLOR;
 
   // Is this CLOUD CPM? (0x55)
-  __at (0xff29) volatile uint8_t  _CLOUD_CPM_KEY;        
+  __at (0xff29) volatile uint8_t  _CLOUD_CPM_KEY;
 
   // The text character display width of the current CPM BIOS. Either 40 or 80
   // Cloud CPM BIOS will always have 80 columns, but on a 40 column system only 40 columns are displayed
   // So this is the number of characters that are displayed.
-  __at (0xff2e) volatile uint8_t  _CPM_COLUMN_WIDTH;   
+  __at (0xff2e) volatile uint8_t  _CPM_COLUMN_WIDTH;
 
   // Clear from current row to the end of screen
   void vt_clearToEndOfScreen(void);
@@ -889,12 +889,12 @@ inline uint8_t ayRead(uint8_t reg);
   // Clear the whole screen
   void vt_clearScreen(void);
 
-  // Clear the current row 
+  // Clear the current row
   void vt_clearLine(void);
 
   // Clear from start of line to the current cursor position
   void vt_clearToStartOfLine(void);
-  
+
   // Clear from start of screen to the current row
   void vt_clearToStartOfScreen(void);
 
@@ -951,17 +951,17 @@ inline uint8_t ayRead(uint8_t reg);
 
   // Is this running Cloud CPM?
   bool isCloudCPM(void);
-#endif 
+#endif
 
 
 // **************************************************************************
 // HCCA Receive
 // ------------
-// 
+//
 // Receive bytes from the HCCA port. This uses an interrupt, so you will need
 // to initialize the interrupt before the method can be used. That means you
 // will need to call initNABULib(); at the start of your program
-// 
+//
 // **************************************************************************
 #ifndef DISABLE_HCCA_RX_INT
 
@@ -1021,9 +1021,9 @@ inline uint8_t ayRead(uint8_t reg);
   // **************************************************************************
   // HCCA Transmit
   // -------------
-  // 
+  //
   // These are transmit methods for the HCCA port
-  // 
+  //
   // **************************************************************************
 
   // **************************************************************************
@@ -1072,10 +1072,10 @@ inline uint8_t ayRead(uint8_t reg);
 // **************************************************************************
 // VDP
 // ---
-// 
+//
 // Start by calling one of the graphic modes that you wish to initialize.
-// 
-// *Note: Read about the function in this file to see if it's compatible 
+//
+// *Note: Read about the function in this file to see if it's compatible
 // with your graphic mode. Some text functions are only available in text mode.
 // **************************************************************************
 #ifndef DISABLE_VDP
@@ -1090,11 +1090,11 @@ inline uint8_t ayRead(uint8_t reg);
   // **************************************************************************
   // Enable the interrupt that will set the variables so you can time your game with
   // the screen refresh rate. This is the recommended method to ensure your game operates
-  // at a constant and acceptable speed. You can call the vdp_waitVDPReadyInt() to synchronize 
+  // at a constant and acceptable speed. You can call the vdp_waitVDPReadyInt() to synchronize
   // the program with the VDP interrupt speed. This is also necessary when drawing to the vdp
   // in any graphic modes. Text mode does not require the vdp interrupt, but graphic modes do.
   // This is because the grahic modes use multiple memory addresses for colors, patterns,
-  // and sprites which must be synchronized. 
+  // and sprites which must be synchronized.
   //
   // *NOTE: to verify that your main code is not exceeding the available time between vdp interrupts,
   //        you can temporarily enable the #define DEBUG_VDP_INT at the top of your main.c before #includes.
@@ -1117,7 +1117,7 @@ inline uint8_t ayRead(uint8_t reg);
   //   // init the nabu lib library
   //   initNABULib();
   //
-  //   // switch to the graphic mode 
+  //   // switch to the graphic mode
   //   vdp_initG2Mode(0, true, false, false, false);
   //
   //   // enable the VDP sync
@@ -1129,7 +1129,7 @@ inline uint8_t ayRead(uint8_t reg);
   //     // i.e. calculate where the characters are gonna be
   //     //      check for collisions and stuff
   //
-  //     if (vdpStatusRegVal & VDP_FLAG_COLLISION) 
+  //     if (vdpStatusRegVal & VDP_FLAG_COLLISION)
   //       doCollisionThings();
   //
   //     // wait for the vsync
@@ -1154,13 +1154,13 @@ inline uint8_t ayRead(uint8_t reg);
   // *Note: a game should be timed by the vsync, so using this function is not recommended. Instead,
   //        use the vdp_enableVDPReadyInt().
   //
-  // Add a function to the VDP frame sync interrupt. The function you add should be _naked with a ei and reti. 
+  // Add a function to the VDP frame sync interrupt. The function you add should be _naked with a ei and reti.
   // After calling initNABULib(), this can be called if you need the vdp interrupt (i.e. for G2 graphics).
   // This function requires that initNABULib() be called first because it will setup the interrupts, and
   // specifically, the _ORIGINAL_INT_MASK, which this function will modify.
   //
   // It is important that the STATUS register (0x01) be read. It is provided in the template below.
-  // 
+  //
   // When you are done with VDP interrupts (ie presenting a menu or something) call vdp_removeISR() to stop the interrupt
   //
   // See this example to setup a custom vdp interrupt...
@@ -1168,10 +1168,10 @@ inline uint8_t ayRead(uint8_t reg);
   // void myVdpISR() __naked {
   //
   //   __asm
-  //     push	hl;      
-  //     push  bc;      
-  //     push  de;      
-  //     push  af;      
+  //     push	hl;
+  //     push  bc;
+  //     push  de;
+  //     push  af;
   //     push  iy;
   //     push  ix;
   //  __endasm;
@@ -1183,16 +1183,16 @@ inline uint8_t ayRead(uint8_t reg);
   //   __asm
   //     pop ix;
   //     pop iy;
-  //     pop af;      
-  //     pop de;      
-  //     pop bc;      
-  //     pop hl;      
+  //     pop af;
+  //     pop de;
+  //     pop bc;
+  //     pop hl;
   //     ei;
   //     reti;
   //   __endasm;
   // }
   //
-  // void main() { 
+  // void main() {
   //
   //   initNABULib();
   //   vdp_addISR(myVdpISR);
@@ -1209,37 +1209,37 @@ inline uint8_t ayRead(uint8_t reg);
 
   // **************************************************************************
   // Initializes the VDP in text mode
-  // 
-  // - fgcolor:   Text color 
-  // - bgcolor:   Background 
+  //
+  // - fgcolor:   Text color
+  // - bgcolor:   Background
   // - autoscoll: Will the text scroll when it reaches bottom of the screen
-  // 
+  //
   // **************************************************************************
   void vdp_initTextMode(uint8_t fgcolor, uint8_t bgcolor, bool autoScroll);
 
   // **************************************************************************
   // Initializes the VDP in text mode with 80 column using the f18a
-  // 
-  // - fgcolor:   Text color 
-  // - bgcolor:   Background 
+  //
+  // - fgcolor:   Text color
+  // - bgcolor:   Background
   // - autoscoll: Will the text scroll when it reaches bottom of the screen
-  // 
+  //
   // **************************************************************************
   void vdp_initTextMode80(uint8_t fgcolor, uint8_t bgcolor, bool autoScroll);
 
   // **************************************************************************
   // Initializes the VDP in Graphic Mode 2
-  // 
+  //
   // bgColor:      Background color
   // bigSprites:   true for 16x16 sprites, or false for 8x8 sprites
   // scaleSprites: use software to scale the sprites by 2.
   //               You will still provide the sprite size specified from 'spriteSize' but
-  //               they will be double the size when put on the screen 
+  //               they will be double the size when put on the screen
   // autoScroll:   Will text scroll when it reaches bottom of the screen
   // splitThirds:  Splits the nametable and color generators into thirds in ram (0, 2048, 4096)
   //               This must be TRUE if you want to use bitmap line drawing mode.
   //               Otherwise, set this to FALSE because you don't need it
-  // 
+  //
   // **************************************************************************
   void vdp_initG2Mode(uint8_t bgColor, bool bigSprites, bool scaleSprites, bool autoScroll, bool splitThirds);
 
@@ -1256,15 +1256,15 @@ inline uint8_t ayRead(uint8_t reg);
   void vdp_initMSXMode(uint8_t bgColor);
 
   // **************************************************************************
-  // 
+  //
   // mode:         One of the graphic modes (VDP_MODE_G2 | VDP_MODE_MULTICOLOR | VDP_MODE_TEXT)
   // fgColor:        Color of the foreground (for text mode only)
   // bgColor:        Color of the background
   // spriteSize:   true for 16x16 sprites, or false for 8x8 sprites
   // scaleSprites: use software to scale the sprites by 2.
   //               You will still provide the sprite size specified from 'spriteSize' but
-  //               they will be double the size when put on the screen 
-  //  autoScroll:  Scrolls textmode vertically when your text is at the bottom of the screen 
+  //               they will be double the size when put on the screen
+  //  autoScroll:  Scrolls textmode vertically when your text is at the bottom of the screen
   // splitThirds:  Splits the nametable and color generators into thirds in ram (0, 2048, 4096)
   //               This must be TRUE if you want to use bitmap line drawing mode.
   //               Otherwise, set this to FALSE because you don't need it
@@ -1311,7 +1311,7 @@ inline uint8_t ayRead(uint8_t reg);
   // If you with to use your own font, specify the font as a const uint8_t[768] ASCII = {} in your code
   // and pass it to this function.
   //
-  // *Note: You must call this function if you're using text mode because it requires 
+  // *Note: You must call this function if you're using text mode because it requires
   //        a font to be set
   // **************************************************************************
   void vdp_loadASCIIFont(uint8_t* font);
@@ -1332,7 +1332,7 @@ inline uint8_t ayRead(uint8_t reg);
   void vdp_loadPatternToId(uint8_t patternId, uint8_t *pattern);
 
   // **************************************************************************
-  // Initialize vdp with the pattern table with an array of data. 
+  // Initialize vdp with the pattern table with an array of data.
   // A pattern table can also contain the font data if needed. If it includes
   // a font, it must start at location 0x100, just like vdp_loadASCIIFont()
   //
@@ -1347,8 +1347,8 @@ inline uint8_t ayRead(uint8_t reg);
   void vdp_loadColorToId(uint8_t patternId,  uint8_t *color);
 
   // **************************************************************************
-  // Initialize the vdp with the color table. 
-  // 
+  // Initialize the vdp with the color table.
+  //
   // *Note: The color of the first pattern should be black or what ever color you
   //        want the screen background to be. Because the clear screen would have
   //        a pattern value of 0, which will use its matching color pattern
@@ -1357,7 +1357,7 @@ inline uint8_t ayRead(uint8_t reg);
 
   // **************************************************************************
   // Set foreground and background color of the pattern at the specified location
-  // 
+  //
   // *Note: Only available in Graphic mode 2
   //
   // - x coordinate
@@ -1387,7 +1387,7 @@ inline uint8_t ayRead(uint8_t reg);
   // - color1 Color of pixel at (x,y). If NULL, plot a pixel with color2
   // - color2 Color of the pixels not set or color of pixel at (x,y) when color1 == NULL
   //
-  // *NOTE: This requires SPLIT THIRDS to be specified in init_gtMode() 
+  // *NOTE: This requires SPLIT THIRDS to be specified in init_gtMode()
   // **************************************************************************
   void vdp_plotHires(uint8_t x, uint8_t y, uint8_t color1, uint8_t color2);
 
@@ -1399,7 +1399,7 @@ inline uint8_t ayRead(uint8_t reg);
   // - y
   // - color
   //
-  // *NOTE: This requires SPLIT THIRDS to be specified in init_gtMode() 
+  // *NOTE: This requires SPLIT THIRDS to be specified in init_gtMode()
   // **************************************************************************
   void vdp_plotColor(uint8_t x, uint8_t y, uint8_t color);
 
@@ -1420,7 +1420,7 @@ inline uint8_t ayRead(uint8_t reg);
 
   // **************************************************************************
   // Print null terminated string at the current cursor position and change the
-  // color table for each character. 
+  // color table for each character.
   //
   // *Note: This only works on graphic mode G2 and will change the color of
   // each character - so be careful how you use this!
@@ -1431,7 +1431,7 @@ inline uint8_t ayRead(uint8_t reg);
   // Print the specified portion of the string at the current cursor position
   // **************************************************************************
   void vdp_printPart(uint16_t offset, uint16_t textLength, uint8_t* text);
-    
+
   // **************************************************************************
   // Set backdrop border color
   // **************************************************************************
@@ -1485,7 +1485,7 @@ inline uint8_t ayRead(uint8_t reg);
   //  2) call vdp_loadSpritePatternNameTable() to load all of the sprite patterns into vdp ram
   //
   //  3) vdp_spriteInit() to assign a pattern name to a sprite id
-  //  
+  //
   //  4) Now you can call vdp_setSpritePosition() to move the spriteId around in a vdp interrupt
   //
   //  5) You can disable sprites that you don't shown with vdp_disableSprite()
@@ -1498,7 +1498,7 @@ inline uint8_t ayRead(uint8_t reg);
   //
   //  Parameters:
   //
-  //                   id: The unique ID that you assign to this sprite between 0-31. 
+  //                   id: The unique ID that you assign to this sprite between 0-31.
   //                       Higher number layers the sprites on top of lower numbers
   //
   //  spritePatternNameId: The ID of the pattern that you assign to this sprite. You get this from
@@ -1518,7 +1518,7 @@ inline uint8_t ayRead(uint8_t reg);
   //  2) call vdp_loadSpritePatternNameTable() to load all of the sprite patterns into vdp ram
   //
   //  3) vdp_spriteInit() to assign a pattern name to a sprite id
-  //  
+  //
   //  4) Now you can call vdp_setSpritePosition() to move the spriteId around in a vdp interrupt
   //
   //  5) You can disable sprites that you don't shown with vdp_disableSprite()
