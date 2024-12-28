@@ -507,13 +507,13 @@ int32_t rn_TCPHandleWrite(uint8_t tcpHandle, uint16_t dataOffset, uint16_t dataL
 // **************************************************************************
 // Get the number of clients connected to the IA TCP Server
 // **************************************************************************
-uint8_t rn_TCPServerClientCnt();
+uint8_t rn_TCPServerClientCnt(void);
 
 
 // **************************************************************************
 // Get the length of readable data on the TCP Server connection.
 // **************************************************************************
-uint8_t rn_TCPServerAvailable();
+uint8_t rn_TCPServerAvailable(void);
 
 // **************************************************************************
 // Read data from the specified tcp server connection
