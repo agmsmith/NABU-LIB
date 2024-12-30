@@ -187,6 +187,13 @@
 // This will cause the ALERT LED to flash if the vdp int was triggered before calling
 // vdp_waitVDPReadyInt().
 //
+// An alternative to DEBUG_VDP_INT and the Alert light is to check the value in
+// vdpIsReady immediately prior to calling vdp_waitVDPReadyInt(), and if it
+// isn't zero (or a larger value if you're targeting a slower frame rate), then
+// play a sound, with a higher pitch if more frames were missed, like this:
+// if (vdpIsReady != 0)
+//   playNoteDelay(2, 65 + vdpIsReady, 40);
+//
 // If you run into problems where the code is taking longer than a screen refresh vdp
 // interrupt, you can skip the "missed" interrupt and wait for the next. This can be
 // done by adding a vdpIsReady = 0; before you call vdp_waitVDPReadyInt();
@@ -1078,7 +1085,7 @@ inline uint8_t ayRead(uint8_t reg);
   // at a constant and acceptable speed. You can call the vdp_waitVDPReadyInt() to synchronize
   // the program with the VDP interrupt speed. This is also necessary when drawing to the vdp
   // in any graphic modes. Text mode does not require the vdp interrupt, but graphic modes do.
-  // This is because the grahic modes use multiple memory addresses for colors, patterns,
+  // This is because the graphic modes use multiple memory addresses for colors, patterns,
   // and sprites which must be synchronized.
   //
   // *NOTE: to verify that your main code is not exceeding the available time between vdp interrupts,

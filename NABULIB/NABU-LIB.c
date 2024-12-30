@@ -841,20 +841,6 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
   void vdp_waitVDPReadyInt(void) {
 
-    // Define DEBUG_VDP_INT to enable debugging for the VDP to see if
-    // vdpIsReady was non-zero prior to your program calling
-    // vdp_waitVDPReadyInt().  You'll see the Alert light flashing in that
-    // case.  It means your program took too long and missed the vertical
-    // screen refresh by the number of times in vdpIsReady.  If you're using a
-    // frame buffer, it's okay if the program is taking too long because
-    // graphics glitches from late frame buffer writes aren't that noticeable,
-    // unlike sprites.
-    //
-    // An alternative to DEBUG_VDP_INT is to check the value in vdpIsReady
-    // immediately prior to calling vdp_waitVDPReadyInt(), and if it isn't zero
-    // (or a larger value if you're targeting a slower frame rate), then play
-    // a sound, like playNoteDelay(2, 71, 40);
-
     #ifdef DEBUG_VDP_INT
 
       if (vdpIsReady)
