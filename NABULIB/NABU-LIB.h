@@ -189,7 +189,7 @@
 //
 // If you run into problems where the code is taking longer than a screen refresh vdp
 // interrupt, you can skip the "missed" interrupt and wait for the next. This can be
-// done by adding a vdpIsReady = false; before you call vdp_waitVDPReadyInt();
+// done by adding a vdpIsReady = 0; before you call vdp_waitVDPReadyInt();
 //
 // *Note: You do not need this enabled when your program is released because it does
 //        take a few instructions to run.
@@ -443,8 +443,9 @@ volatile uint8_t _randomSeed = 0;
   bool _vdpSplitThirds;
 
   // used for the vdp_enableVDPReadyInt()
+  // vdpIsReady now increments for every interrupt, supporting lower frame rates.
   volatile uint8_t vdpStatusRegVal = 0x00;
-  volatile bool    vdpIsReady      = false;
+  volatile uint8_t vdpIsReady      = 0;
 
 
   // **************************************************************************
@@ -1086,13 +1087,14 @@ inline uint8_t ayRead(uint8_t reg);
   //
   // If you run into problems where the code is taking longer than a screen refresh vdp
   // interrupt, you can skip the "missed" interrupt and wait for the next. This can be
-  // done by adding a vdpIsReady = false; before you call vdp_waitVDPReadyInt();
+  // done by adding a vdpIsReady = 0; before you call vdp_waitVDPReadyInt();
   //
   // The following variables will be set from an interrupt.
   //
   // 1) uint8_t  vdpStatusRegVal - contains the value of the VDP Status Register (Check TMS9918a manual for collision bit)
-  // 2) bool     vdpIsReady      - TRUE if the VDP has just completed a vsync. But you will normally not
-  //                                use this because you'll be calling vdp_waitVDPReadyInt()
+  // 2) uint8_t  vdpIsReady      - Incremented every time the VDP completes a
+  //                               vsync. But you will normally not use this
+  //                               because you'll be calling vdp_waitVDPReadyInt()
   //
   // Here is an example of how to use this...
   //
