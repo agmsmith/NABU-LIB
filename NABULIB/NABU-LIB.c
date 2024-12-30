@@ -796,15 +796,17 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     __asm
 
       push af;
+      push hl;
 
     // _vdpStatus = IO_VDPLATCH;
       in	a, (_IO_VDPLATCH)
       ld	(_vdpStatusRegVal), a
 
-    // _vdpReady = true;
-      ld  a, 0x01
-      ld  (_vdpIsReady), a
+    // vdpReady++;
+      ld  hl, _vdpIsReady
+      inc (hl)
 
+      pop hl;
       pop af;
 
       ei;
@@ -839,12 +841,19 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
   void vdp_waitVDPReadyInt(void) {
 
-    // uncomment this to enable debugging for the VDP to see if the vdpIsReady flag was
-    // set prior to your program calling vdp_waitVDPReadyInt(). That means your program took
-    // too long and missed the vertical screen refresh.
-    // If you're using a frame buffer, it's okay if the program is taking too long because
-    // you could use this function to wait for the vdp to be ready before updating the
-    // frame buffer.
+    // Define DEBUG_VDP_INT to enable debugging for the VDP to see if
+    // vdpIsReady was non-zero prior to your program calling
+    // vdp_waitVDPReadyInt().  You'll see the Alert light flashing in that
+    // case.  It means your program took too long and missed the vertical
+    // screen refresh by the number of times in vdpIsReady.  If you're using a
+    // frame buffer, it's okay if the program is taking too long because
+    // graphics glitches from late frame buffer writes aren't that noticeable,
+    // unlike sprites.
+    //
+    // An alternative to DEBUG_VDP_INT is to check the value in vdpIsReady
+    // immediately prior to calling vdp_waitVDPReadyInt(), and if it isn't zero
+    // (or a larger value if you're targeting a slower frame rate), then play
+    // a sound, like playNoteDelay(2, 71, 40);
 
     #ifdef DEBUG_VDP_INT
 
@@ -855,9 +864,13 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     #endif
 
-    vdpIsReady = false;
-
+    // Busy wait until the next vSync happens.
+    vdpIsReady = 0;
     while (!vdpIsReady);
+
+    // Reset for the next frame.  If it's still zero next time, the program
+    // didn't miss the vSync.  Otherwise the count shows how many frames missed.
+    vdpIsReady = 0;
   }
 
   void vdp_disableVDPReadyInt(void) {
