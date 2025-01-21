@@ -796,17 +796,16 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     __asm
 
       push af;
-      push hl;
 
     // _vdpStatus = IO_VDPLATCH;
       in	a, (_IO_VDPLATCH)
       ld	(_vdpStatusRegVal), a
 
     // vdpReady++;
-      ld  hl, _vdpIsReady
-      inc (hl)
+      ld	a, (_vdpIsReady)
+      inc	a
+      ld	(_vdpIsReady), a
 
-      pop hl;
       pop af;
 
       ei;
