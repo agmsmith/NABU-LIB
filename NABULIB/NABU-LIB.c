@@ -926,15 +926,13 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     NABU_EnableInterrupts();
   }
 
-  void vdp_init(uint8_t mode, uint8_t fgColor, uint8_t bgColor, bool big_sprites, bool magnify, bool autoScroll, bool splitThirds) {
+  void vdp_init(uint8_t mode, uint8_t fgColor, uint8_t bgColor, bool big_sprites, bool magnify, bool splitThirds) {
 
     _vdpMode = mode;
 
     _vdpSplitThirds = splitThirds;
 
     _vdpSpriteSizeSelected = big_sprites;
-
-    _autoScroll = autoScroll;
 
     _vdpInterruptEnabled = false;
 
@@ -963,7 +961,6 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
         fgColor = 0;
         _vdpCursorMaxX = 31;
         _vdpCursorMaxXFull = 32;
-        _vdpTextBufferSize = 768;
 
         break;
 
@@ -982,7 +979,6 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
         _vdpCursorMaxX = 39;
         _vdpCursorMaxXFull = 40;
-        _vdpTextBufferSize = 960;
 
         break;
       case VDP_MODE_TEXT80:
@@ -999,7 +995,6 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
         _vdpCursorMaxX = 79;
         _vdpCursorMaxXFull = 80;
-        _vdpTextBufferSize = 1920;
 
         break;
       case VDP_MODE_MULTICOLOR:
@@ -1018,8 +1013,6 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
         fgColor = 0;
         _vdpCursorMaxX = 31;
         _vdpCursorMaxXFull = 32;
-
-        _vdpTextBufferSize = 768;
 
         break;
     }
@@ -1064,64 +1057,47 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     vdp_setRegister(7, bgColor & 0x0f);
   }
 
-  void vdp_initTextMode80(uint8_t fgColor, uint8_t bgColor, bool autoScroll) {
+  void vdp_initTextMode80(uint8_t fgColor, uint8_t bgColor) {
 
-    vdp_init(VDP_MODE_TEXT80, fgColor, bgColor , false, false, autoScroll, false);
+    vdp_init(VDP_MODE_TEXT80, fgColor, bgColor , false, false, false);
   }
 
-  void vdp_initTextMode(uint8_t fgColor, uint8_t bgColor, bool autoScroll) {
+  void vdp_initTextMode(uint8_t fgColor, uint8_t bgColor) {
 
-    vdp_init(VDP_MODE_TEXT40, fgColor, bgColor , false, false, autoScroll, false);
+    vdp_init(VDP_MODE_TEXT40, fgColor, bgColor , false, false, false);
   }
 
-  void vdp_initG2Mode(uint8_t bgColor, bool bigSprites, bool scaleSprites, bool autoScroll, bool splitThirds) {
+  void vdp_initG2Mode(uint8_t bgColor, bool bigSprites, bool scaleSprites, bool splitThirds) {
 
-    vdp_init(VDP_MODE_G2, 0, bgColor, bigSprites, scaleSprites, autoScroll, splitThirds);
+    vdp_init(VDP_MODE_G2, 0, bgColor, bigSprites, scaleSprites, splitThirds);
   }
 
   void vdp_initMultiColorMode(void) {
 
-    vdp_init(VDP_MODE_MULTICOLOR, 0, 0, false, false, false, false);
+    vdp_init(VDP_MODE_MULTICOLOR, 0, 0, false, false, false);
   }
 
   void vdp_clearScreen(void) {
-
-    vdp_setWriteAddress(_vdpPatternNameTableAddr);
-
-    uint8_t *start = _vdp_textBuffer;
-    uint8_t *end = start + (_vdpCursorMaxXFull * 24);
 
     uint8_t cr = 0x00;
 
     if (_vdpMode == VDP_MODE_TEXT40 || _vdpMode == VDP_MODE_TEXT80)
       cr = 0x20;
 
-    do {
-
-      IO_VDPDATA = cr;
-
-      *start = 0x20;
-
-      start++;
-    } while (start != end);
+    vdp_fillScreen(cr);
   }
 
   void vdp_fillScreen(uint8_t c) {
 
     vdp_setWriteAddress(_vdpPatternNameTableAddr);
 
-    uint8_t *start = _vdp_textBuffer;
-
-    uint8_t *end = start + (_vdpCursorMaxXFull * 24);
-
+    uint16_t count = _vdpCursorMaxXFull * 24;
+    
     do {
-
+    
       IO_VDPDATA = c;
 
-      *start = c;
-
-      start++;
-    } while (start != end);
+    } while (--count != 0);
   }
 
   void vdp_clearRows(uint8_t topRow, uint8_t bottomRow) {
@@ -1130,17 +1106,13 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     vdp_setWriteAddress(_vdpPatternNameTableAddr + name_offset);
 
-    uint8_t *start = _vdp_textBuffer + (topRow * _vdpCursorMaxXFull);
-    uint8_t *end   = _vdp_textBuffer + (bottomRow * _vdpCursorMaxXFull);
+    uint16_t count = (bottomRow - topRow) * _vdpCursorMaxXFull;
 
     do {
 
       IO_VDPDATA = 0x20;
 
-      *start = 0x20;
-
-      start++;
-    } while (start != end);
+    } while (--count != 0);
   }
 
   void vdp_loadASCIIFont(uint8_t *font) {
@@ -1186,7 +1158,6 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     uint16_t name_offset = y * _vdpCursorMaxXFull + x;
 
     vdp_setWriteAddress(_vdpPatternNameTableAddr + name_offset);
-    _vdp_textBuffer[name_offset] = patternId;
 
     IO_VDPDATA = patternId;
   }
@@ -1610,16 +1581,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
   void vdp_newLine(void) {
 
-    if (vdp_cursor.y == _autoScrollBottomRow) {
-
-      if (_autoScroll)
-        vdp_scrollTextUp(_autoScrollTopRow, _autoScrollBottomRow);
-
-      vdp_cursor.x = 0;
-    } else {
-
-      vdp_setCursor2(0, ++vdp_cursor.y);
-    }
+      vdp_setCursor2(0, vdp_cursor.y + 1);
   }
 
   void vdp_setBackDropColor(uint8_t color) {
@@ -1673,23 +1635,12 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     IO_VDPDATA = chr;
 
-    _vdp_textBuffer[name_offset] = chr;
-
-    if (_autoScroll && vdp_cursor.x == _vdpCursorMaxX && vdp_cursor.y == _autoScrollBottomRow) {
-
-      vdp_scrollTextUp(_autoScrollTopRow, _autoScrollBottomRow);
-
-      vdp_cursor.x = 0;
-    }
-
     vdp_setCursor2(vdp_cursor.x + 1, vdp_cursor.y);
   }
 
   void vdp_writeCharAtLocation(uint8_t x, uint8_t y, uint8_t c) {
 
     uint16_t name_offset = y * _vdpCursorMaxXFull + x;
-
-    _vdp_textBuffer[name_offset] = c;
 
     vdp_setWriteAddress(_vdpPatternNameTableAddr + name_offset);
 
@@ -1703,105 +1654,6 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     vdp_setReadAddress(_vdpPatternNameTableAddr + name_offset);
 
     return IO_VDPDATA;
-  }
-
-  uint8_t vdp_getCharAtLocationBuf(uint8_t x, uint8_t y) {
-
-    return _vdp_textBuffer[y * _vdpCursorMaxXFull + x];
-  }
-
-  void vdp_setCharAtLocationBuf(uint8_t x, uint8_t y, uint8_t c) {
-
-    _vdp_textBuffer[y * _vdpCursorMaxXFull + x] = c;
-  }
-
-  void vdp_refreshViewPort(void) {
-
-    vdp_setWriteAddress(_vdpPatternNameTableAddr);
-
-    __asm
-
-      push hl;
-      push de;
-
-      ld hl, __vdp_textBuffer;
-      ld de, (__vdpTextBufferSize);
-
-      vdp_refreshViewPortLoop3:
-
-        ld a, (hl);
-        out (0xa0), a;
-
-        inc hl;
-        dec de;
-
-        ld A, D;
-        or E;
-        jp nz, vdp_refreshViewPortLoop3;
-
-      pop de;
-      pop hl;
-    __endasm;
-  }
-
-  void vdp_scrollTextUp(uint8_t topRow, uint8_t bottomRow) {
-
-    vdp_setWriteAddress(_vdpPatternNameTableAddr + (topRow * _vdpCursorMaxXFull));
-
-    uint8_t *to   = _vdp_textBuffer + (topRow * _vdpCursorMaxXFull);
-    uint8_t *from = to + _vdpCursorMaxXFull;
-    uint8_t *end  = _vdp_textBuffer + ((bottomRow + 1) * _vdpCursorMaxXFull);
-
-    do {
-
-      *to = *from;
-
-      IO_VDPDATA = *to;
-
-      to++;
-      from++;
-    } while (from != end);
-
-    do {
-
-      *to = 0x20;
-      IO_VDPDATA = 0x20;
-
-      to++;
-    } while (to != end);
-  }
-
-  void vdp_scrollTextDown(uint8_t topRow, uint8_t bottomRow) {
-
-    uint8_t *fromPtr = _vdp_textBuffer + (bottomRow * _vdpCursorMaxXFull) - 1;
-    uint8_t *toPtr   = fromPtr + _vdpCursorMaxXFull;
-    uint8_t *endPtr  = (_vdp_textBuffer - 1) + (topRow * _vdpCursorMaxXFull);
-
-    do {
-
-      *toPtr = *fromPtr;
-
-      toPtr--;
-      fromPtr--;
-    } while (fromPtr != endPtr);
-
-    do {
-
-      *toPtr = 0x20;
-
-      toPtr--;
-    } while (toPtr != endPtr);
-
-    vdp_setWriteAddress(_vdpPatternNameTableAddr + (topRow * _vdpCursorMaxXFull));
-    uint8_t *v = _vdp_textBuffer + (topRow * _vdpCursorMaxXFull);
-    uint8_t *e = _vdp_textBuffer + ((bottomRow + 1) * _vdpCursorMaxXFull);
-
-    do {
-
-      IO_VDPDATA = *v;
-
-      v++;
-    } while (v != e);
   }
 
   void vdp_writeUInt8ToBinary(uint8_t v) {

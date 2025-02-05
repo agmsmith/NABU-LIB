@@ -363,19 +363,6 @@ volatile uint8_t _randomSeed = 0;
 
 
   // **************************************************************************
-  // Double buffer for text mode scrolling.
-  // This is because reading and writing the VDP vram is very slow
-  // and it is quicker to keep 960 bytes in RAM to double buffer
-  // the text mode.
-  //
-  // The amount of this buffer that is used based on the current mode is
-  // stored in _vdpTextBufferSize
-  // **************************************************************************
-  #define TEXT_BUFFER_SIZE 1920
-  volatile uint8_t _vdp_textBuffer[TEXT_BUFFER_SIZE]; // row * col = 960 bytes
-
-
-  // **************************************************************************
   // The current position of the cursor used by textmode
   // functions. Such as vdp_write() and vdp_print() and
   // vdp_newLine().
@@ -430,18 +417,8 @@ volatile uint8_t _randomSeed = 0;
   // The max vertical line count (always 24)
   const uint8_t _vdpCursorMaxYFull = 24;
 
-  // The size of the double buffer (_vdp_textBuffer) size that's used (i.e. 768 for graphic modes, 960 for text mode)
-  uint16_t _vdpTextBufferSize;
-
   // The current VDP mode (text or graphic)
   uint8_t _vdpMode;
-
-  // Is auto scroll enabled? Will auto scroll when using vdp_write() or vdp_print() or vdp_newline()
-  bool _autoScroll;
-
-  // auto scroll Top and Bottom rows for the region
-  uint8_t _autoScrollTopRow    = 0;
-  uint8_t _autoScrollBottomRow = 23;
 
   // Are the vdp interrupts enabled?
   bool _vdpInterruptEnabled = false;
@@ -1205,20 +1182,18 @@ inline uint8_t ayRead(uint8_t reg);
   //
   // - fgcolor:   Text color
   // - bgcolor:   Background
-  // - autoscoll: Will the text scroll when it reaches bottom of the screen
   //
   // **************************************************************************
-  void vdp_initTextMode(uint8_t fgcolor, uint8_t bgcolor, bool autoScroll);
+  void vdp_initTextMode(uint8_t fgcolor, uint8_t bgcolor);
 
   // **************************************************************************
   // Initializes the VDP in text mode with 80 column using the f18a
   //
   // - fgcolor:   Text color
   // - bgcolor:   Background
-  // - autoscoll: Will the text scroll when it reaches bottom of the screen
   //
   // **************************************************************************
-  void vdp_initTextMode80(uint8_t fgcolor, uint8_t bgcolor, bool autoScroll);
+  void vdp_initTextMode80(uint8_t fgcolor, uint8_t bgcolor);
 
   // **************************************************************************
   // Initializes the VDP in Graphic Mode 2
@@ -1228,13 +1203,12 @@ inline uint8_t ayRead(uint8_t reg);
   // scaleSprites: use software to scale the sprites by 2.
   //               You will still provide the sprite size specified from 'spriteSize' but
   //               they will be double the size when put on the screen
-  // autoScroll:   Will text scroll when it reaches bottom of the screen
   // splitThirds:  Splits the nametable and color generators into thirds in ram (0, 2048, 4096)
   //               This must be TRUE if you want to use bitmap line drawing mode.
   //               Otherwise, set this to FALSE because you don't need it
   //
   // **************************************************************************
-  void vdp_initG2Mode(uint8_t bgColor, bool bigSprites, bool scaleSprites, bool autoScroll, bool splitThirds);
+  void vdp_initG2Mode(uint8_t bgColor, bool bigSprites, bool scaleSprites, bool splitThirds);
 
   // **************************************************************************
   // Initializes the VDP in 64x48 Multicolor Mode. Not really useful if more than 4k Video ram is available
@@ -1257,12 +1231,11 @@ inline uint8_t ayRead(uint8_t reg);
   // scaleSprites: use software to scale the sprites by 2.
   //               You will still provide the sprite size specified from 'spriteSize' but
   //               they will be double the size when put on the screen
-  //  autoScroll:  Scrolls textmode vertically when your text is at the bottom of the screen
   // splitThirds:  Splits the nametable and color generators into thirds in ram (0, 2048, 4096)
   //               This must be TRUE if you want to use bitmap line drawing mode.
   //               Otherwise, set this to FALSE because you don't need it
   // **************************************************************************
-  void vdp_init(uint8_t mode, uint8_t fgColor, uint8_t bgColor, bool big_sprites, bool magnify, bool autoScroll, bool splitThirds);
+  void vdp_init(uint8_t mode, uint8_t fgColor, uint8_t bgColor, bool big_sprites, bool magnify, bool splitThirds);
 
   // **************************************************************************
   // Clear all VRAM set to 0's
@@ -1361,8 +1334,7 @@ inline uint8_t ayRead(uint8_t reg);
   void vdp_colorizePattern(uint8_t patternId, uint8_t fg, uint8_t bg);
 
   // **************************************************************************
-  // Place a pattern by the ID on X and Y in G2 mode. Also saves the pattern into
-  // the double buffer for screen scrolling.
+  // Place a pattern by the ID on X and Y in G2 mode.
   //
   // x:         x coordinate
   // y:         y coordinate
@@ -1567,27 +1539,6 @@ inline uint8_t ayRead(uint8_t reg);
   // buffer without accessing VRAM.
   // **************************************************************************
   inline uint8_t vdp_getCharAtLocationVRAM(uint8_t x, uint8_t y);
-
-  // **************************************************************************
-  // In text mode, there is a buffer copy of the screen
-  // **************************************************************************
-  inline uint8_t vdp_getCharAtLocationBuf(uint8_t x, uint8_t y);
-
-  // **************************************************************************
-  // Set the character in memory buffer at location. This does not update the screen!
-  // It is used by the text scroll methods
-  // </summary
-  void vdp_setCharAtLocationBuf(uint8_t x, uint8_t y, uint8_t c);
-
-  // **************************************************************************
-  // Scroll all lines up between topRow and bottomRow
-  // **************************************************************************
-  void vdp_scrollTextUp(uint8_t topRow, uint8_t bottomRow);
-
-  // **************************************************************************
-  // Scroll all lines down between topRow and bottomRow
-  // **************************************************************************
-//  void vdp_scrollTextDown(uint8_t topRow, uint8_t bottomRow);
 
   // **************************************************************************
   // Write a character at the specified location
