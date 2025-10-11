@@ -242,8 +242,9 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
-#include <stdio.h>
-
+#ifndef __NABU_BARE__ /* No stdio in "Bare" subtype compiles, to save space. */
+  #include <stdio.h>
+#endif
 
 // **************************************************************************
 // Special Function Registers
