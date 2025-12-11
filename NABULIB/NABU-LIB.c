@@ -1511,22 +1511,18 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     while (*text != 0x00) {
 
-      if (*text == ' ') {
+      while (*text == ' ') {
 
         text++;
 
-        uint8_t *startOfNextWord = text;
+        uint8_t *endOfNextWord = text;
 
         // Find the length of the next word
-        while (*startOfNextWord != ' '  &&
-              *startOfNextWord != '.'  &&
-              *startOfNextWord != ','  &&
-              *startOfNextWord != '!'  &&
-              *startOfNextWord != 0x00)
-          startOfNextWord++;
+        while (*endOfNextWord != ' ' && *endOfNextWord != 0x00)
+          endOfNextWord++;
 
         // Calculate the length of the next word
-        uint8_t nextWordLength = startOfNextWord - text;
+        uint8_t nextWordLength = endOfNextWord - text;
 
         // Check if the next word exceeds the screen width
         if (vdp_cursor.x + nextWordLength >= rightMargin) {
