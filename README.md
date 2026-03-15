@@ -2,6 +2,14 @@
 
 MAKE SOME SOMETHING :D
 
+## CleanedUpNabuLib Modified Fork
+
+This CleanedUpNabuLib branch by Alexander G. M. Smith has some corrections to reduce warnings (add void to function declarations with no arguments), white space improvements, and rebases updates from the main fork.  It's functionally the same as the main NABU-LIB.
+
+There's also a NthPongCustomisations branch which goes further, making it more optimal for Nth Pong Wars, including removing the text buffer in RAM to save space (CP/M has a text buffer too, so that's redundant) and adding a missed frame count to the vertical blank interrupt.  See the git log to find what I "improved" in the quest for more RAM for my ever-growing game (see the [Nth Pong Wars Blog](https://web.ncf.ca/au829/WeekendReports/20240207/NthPongWarsBlog.html) for that story).
+
+# NABU-LIB Main Branch
+
 For HomeBrew and Cloud CP/M (HTTPS://NABU.CA) RetroNet of the NABU Personal Computer Preservation Project. This repo is a z88dk C library for the NABU PC (personal computer). It includes efficient C functions for video, audio, hcca, keyboard, and more for the NABU Computer. This is an ongoing project, so follow this repo for additions, changes, and bug fixes.
 
 This library is optimized to be as efficient as possible, including a text mode double buffer for scrolling, special function registers, and inlining where appropriate. This project aims to build a library for Cloud CP/M and homebrew development of the NABU PC with the easiest and fastest toolset.
