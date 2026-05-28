@@ -1550,9 +1550,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
   //     table is row-major contiguous in VRAM, so the chip is already pointing
   //     at the next row's first byte for free - no setWriteAddress needed.
   //
-  //  2) Bottom-of-region with autoscroll on: scroll the region up, clamp y to
-  //     the bottom row, and re-set the VDP write address (scrollTextUp leaves
-  //     the address one byte past the region).
+  //  2) Bottom-of-region with autoscroll on: code removed for NthPongWars.
   //
   //  3) Bottom-of-screen with autoscroll off: clamp y to _vdpCursorMaxY and
   //     re-set the VDP write address.
@@ -1560,22 +1558,10 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
   // Returns the new name-table offset so the caller can keep its mirror index
   // and the VDP's internal counter in sync.
   // **************************************************************************
-  static uint16_t _vdp_handleEOL() {
+  static uint16_t _vdp_handleEOL(void) {
 
     vdp_cursor.x = 0;
     vdp_cursor.y++;
-
-    if (_autoScroll && vdp_cursor.y > _autoScrollBottomRow) {
-
-      vdp_scrollTextUp(_autoScrollTopRow, _autoScrollBottomRow);
-      vdp_cursor.y = _autoScrollBottomRow;
-
-      uint16_t off = vdp_cursor.y * _vdpCursorMaxXFull;
-
-      vdp_setWriteAddress(_vdpPatternNameTableAddr + off);
-
-      return off;
-    }
 
     if (vdp_cursor.y > _vdpCursorMaxY) {
 
@@ -1607,7 +1593,6 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     while (*text != 0x00) {
 
       IO_VDPDATA = *text;
-      _vdp_textBuffer[name_offset] = *text;
 
       name_offset++;
       text++;
@@ -1693,7 +1678,6 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     do {
 
       IO_VDPDATA = *start;
-      _vdp_textBuffer[name_offset] = *start;
 
       name_offset++;
       start++;
