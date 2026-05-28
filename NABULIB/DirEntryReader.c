@@ -114,13 +114,13 @@
 // FCB structure definition (may be duplicated from header)
 struct FCB {
   uint8_t drive;          // drive code (drive | user area)
-  uint8_t name[8];        // file name 
-  uint8_t ext[3];         // file type 
-  uint8_t extent;         // file extent 
+  uint8_t name[8];        // file name
+  uint8_t ext[3];         // file type
+  uint8_t extent;         // file extent
   uint8_t reserved[2];    // reserved
-  uint8_t recordCnt;      // number of records in present extent 
+  uint8_t recordCnt;      // number of records in present extent
   uint8_t discmap[16];    // CP/M disc map (AL)
-  uint8_t currentRecord;  // next record to read or write 
+  uint8_t currentRecord;  // next record to read or write
   uint8_t ranrec[3];      // random record number (24 bit no.)
 };
 
@@ -226,7 +226,7 @@ void ResetTFCB(uint8_t *args) {
     while (i < 8 && *args != 0x00 && *args != '.') {
 
       // Place the character in the FCB filename area.
-      fcb1[1 + i] = *args;  
+      fcb1[1 + i] = *args;
       i++;
       args++;
     }
@@ -240,7 +240,7 @@ void ResetTFCB(uint8_t *args) {
     while (j < 3 && *args != 0x00) {
 
       // Place the character in the FCB extension area.
-      fcb1[9 + j] = *args;  
+      fcb1[9 + j] = *args;
       j++;
       args++;
     }
@@ -280,54 +280,54 @@ void CreateFcb(struct FCB *fc, uint8_t drive, uint8_t *name) {
   uint8_t *dest_name = fc->name; // Points to the beginning of the name field.
   uint8_t *dest_ext  = fc->ext;  // Points to the beginning of the extension field.
   uint8_t fillChar;              // Character used to fill unused spaces.
-  
+
   memset((void*)fc, 0x00, sizeof(*fc));
 
   // Set drive and user number in the FCB.
   fc->drive = drive;
- 
+
   // Convert the entire input string to uppercase.
   UpperStr(name);
-  
+
   // Copy the name up to the '.' or a '*'.
   // Copy characters into fc->name until a dot, asterisk, or whitespace is encountered,
   // or until 8 characters have been copied.
-  while (*name != '.' && *name != '*' && *name > ' ' && dest_name < fc->name + 8) 
-      *dest_name++ = *name++;  
-  
+  while (*name != '.' && *name != '*' && *name > ' ' && dest_name < fc->name + 8)
+      *dest_name++ = *name++;
+
   // Determine the fill character: if '*' encountered then use '?' otherwise a space.
   if (*name == '*')
       fillChar = '?';
   else
       fillChar = ' ';
-  
+
   // Fill the remainder of the 8-character file name field.
-  while (dest_name < fc->name + 8) 
-      *dest_name++ = fillChar;  
-  
+  while (dest_name < fc->name + 8)
+      *dest_name++ = fillChar;
+
   // Loop till we get to the extension: skip characters until a dot is found.
-  while (*name && *name != '.') 
-      name++;  
-  
+  while (*name && *name != '.')
+      name++;
+
   // If a dot is found, skip it.
   if (*name == '.')
       name++;
-  
+
   // Now fill in the extension.
   // Copy up to 3 characters for the extension until whitespace or '*' is encountered.
-  while (*name > ' ' && *name != '*' && dest_ext < fc->ext + 3) 
-      *dest_ext++ = *name++;  
-  
+  while (*name > ' ' && *name != '*' && dest_ext < fc->ext + 3)
+      *dest_ext++ = *name++;
+
   // Determine the fill character for the extension.
   if (*name == '*')
       fillChar = '?';
   else
       fillChar = ' ';
-  
+
   // Fill the remainder of the 3-character extension field.
-  while (dest_ext < fc->ext + 3) 
-      *dest_ext++ = fillChar;  
-  
+  while (dest_ext < fc->ext + 3)
+      *dest_ext++ = fillChar;
+
   // Initialize extent and currentRecord fields to 0.
   fc->extent = 0;
   fc->currentRecord = 0;
@@ -466,7 +466,7 @@ void DirGetEntryName(uint8_t *filenamePtr, uint8_t *extensionPtr) {
 void DirGetEntryNameWithExtension(uint8_t *filenamePtr) {
 
   memset(filenamePtr, 0, 13);
- 
+
   // Calculate pointer to the directory entry in copyBuf.
   // Each directory entry is 32 bytes.
   uint8_t *entry = copyBuf + (_directoryRecordIndex * 32);
@@ -478,9 +478,9 @@ void DirGetEntryNameWithExtension(uint8_t *filenamePtr) {
   // Copy filename characters until a space is encountered or 8 characters are copied.
   for (uint8_t i = 0; i < 8; i++) {
 
-      if (src[i] == ' ') 
+      if (src[i] == ' ')
           break;
-      
+
       *dst++ = src[i];
   }
 
@@ -504,9 +504,9 @@ void DirGetEntryNameWithExtension(uint8_t *filenamePtr) {
 
       for (uint8_t i = 0; i < 3; i++) {
 
-          if (src[i] == ' ') 
+          if (src[i] == ' ')
               break;
-          
+
           *dst++ = src[i];
       }
   }
