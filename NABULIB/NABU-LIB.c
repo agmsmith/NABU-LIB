@@ -1591,7 +1591,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
   // Returns the new name-table offset so the caller can keep its mirror index
   // and the VDP's internal counter in sync.
   // **************************************************************************
-  static uint16_t _vdp_handleEOL() {
+  static uint16_t _vdp_handleEOL(void) {
 
     vdp_cursor.x = 0;
     vdp_cursor.y++;
