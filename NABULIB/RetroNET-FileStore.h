@@ -201,13 +201,13 @@ int32_t rn_fileSize(uint8_t filenameLen, uint8_t* filename);
 
 // **************************************************************************
 // Read data from the specified filename without using a file handle.
-// 
+//
 // - filenameLen is the length of the filename to open
 // - filename is a pointer to the filename. All files stored on the IA Server will be in UPPERCASE
 // - buffer is a pointer to a buffer that the data will be written to.
 // - bufferOffset is the offset within the buffer where the data will be written. Use 0 if you're
 //   writing to the beginning of the buffer, for example.
-// - readOffset is the offset of the file that you will be reading from. 
+// - readOffset is the offset of the file that you will be reading from.
 // - readLength is the amount of data that you will be reading.
 //
 // Returns the number of bytes read or 0 if there was an error or reached EOF
@@ -216,14 +216,14 @@ uint16_t rn_FileRead(uint8_t filenameLen, uint8_t* filename, uint8_t* buffer, ui
 
 // **************************************************************************
 // Replace data in a file by overwriting bytes with the data
-// Files are stored in the RetroNET Storage folder that is defined in the Internet Adapter settings. 
+// Files are stored in the RetroNET Storage folder that is defined in the Internet Adapter settings.
 // The file can contain slashes (\) or (/) to specify directory and drive (i.e. A:)
-// 
+//
 // - filenameLen is the length of the filename to open
 // - filename is a pointer to the filename. All files stored on the IA Server will be in UPPERCASE
 // - fileOffset is the offset of the file where the data will be overwritten
 // - dataOffset is the offset of the data that will be written
-// - dataLen is the length of data that will be written 
+// - dataLen is the length of data that will be written
 // - data is a pointer to the data
 // **************************************************************************
 void rn_FileReplace(uint8_t filenameLen, uint8_t* filename, uint32_t fileOffset, uint16_t dataOffset, uint16_t dataLen, int8_t* data);
@@ -260,7 +260,7 @@ void rn_fileHandleDetails(int8_t fileHandle, FileDetailsStruct* s);
 // **************************************************************************
 <<<<<<< HEAD
 // Read data from the specified file handle.
-// 
+//
 =======
 // Read data from the specified filename.
 //
@@ -370,7 +370,7 @@ void rn_fileHandleMove(uint8_t srcFilenameLen, uint8_t* srcFilename, uint8_t des
 // **************************************************************************
 // Returns the number of files within the path, including wildcards.
 // Populates an internal list of files on the server that can be viewed with rn_fileListItem().
-// 
+//
 // *Note: All files and directories stored on the IA Server will be in UPPERCASE
 //
 // To get the details of a file, you must do this...
