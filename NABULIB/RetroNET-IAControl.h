@@ -42,6 +42,7 @@ void ia_restoreInterrupts(void) {
   NABU_EnableInterrupts();
 }
 
+#ifndef NTHPONG_IACONTROL_DATE_ONLY
 // -----------------------------------------------------------
 // Get the number of items at the parent level of nabu channels
 // -----------------------------------------------------------
@@ -529,6 +530,7 @@ uint8_t ia_extended_getOperatingSystem(void) {
 
   return t;
 }
+#endif /* NTHPONG_IACONTROL_DATE_ONLY */
 
 // -----------------------------------------------------------
 // Get the current date/time as a string in the specified format
@@ -590,6 +592,7 @@ void ia_getCurrentDateTimeStr(uint8_t *dateFormatStr, uint8_t dateFormatStrLen, 
   ia_restoreInterrupts();
 }
 
+#ifndef NTHPONG_IACONTROL_DATE_ONLY
 // -----------------------------------------------------------
 // Returns a string with the internet adapter version
 // versionStr must be 14 bytes long
@@ -630,5 +633,6 @@ bool ia_getNewVersionAvailable(void) {
 
   return (val > 0);
 }
+#endif /* NTHPONG_IACONTROL_DATE_ONLY */
 
 #endif
