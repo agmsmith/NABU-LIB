@@ -570,7 +570,7 @@ uint8_t ia_extended_getOperatingSystem(void) {
 //
 // *Note: the dateBuff must be 64 bytes long
 // -----------------------------------------------------------
-void ia_getCurrentDateTimeStr(uint8_t *dateFormatStr, uint8_t dateFormatStrLen, uint8_t *dateBuff) {
+void ia_getCurrentDateTimeStr(const char *dateFormatStr, uint8_t dateFormatStrLen, char *dateBuff) {
 
   ia_focusInterrupts();
 
@@ -583,7 +583,7 @@ void ia_getCurrentDateTimeStr(uint8_t *dateFormatStr, uint8_t dateFormatStrLen, 
 
   hcca_writeByte(dateFormatStrLen);
 
-  hcca_writeBytes(0, dateFormatStrLen, dateFormatStr);
+  hcca_writeBytes(0, dateFormatStrLen, (uint8_t *) dateFormatStr);
 
   uint8_t readCnt = hcca_readByte();
 
